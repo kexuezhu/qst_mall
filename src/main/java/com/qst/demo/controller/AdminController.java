@@ -12,6 +12,7 @@ public class AdminController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/a");
         view.addObject("msg","zhangsan");
+        view.addObject("name","kexuezhu");
 
 
         return view;
