@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>青软商城-登录</title>
+    <link rel="stylesheet" href="../../static/css/common.css">
+    <link rel="stylesheet" href="../../static/css/login.css">
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+<body>
+<div class="top center">
+    <div class="logo center">
+        <a href="./index.html" target="_blank"><img src="../../static/goods-img/login-logo-2.png" alt=""></a>
+    </div>
+</div>
+<div id="particles-js" class="form center">
+    <div class="login">
+        <div class="login_center">
+            <div class="login_top">
+                <div class="left fl">会员登录</div>
+                <div class="right fr">您还不是我们的会员？<a href="register.html" target="_self">立即注册</a></div>
+                <div class="clear"></div>
+                <div class="under-line center"></div>
+            </div>
+            <form id="loginForm" action="">
+                <div class="login_main center">
+                    <div class="login-info">手机号:&nbsp;<input class="login-info-input"
+                                                             type="text"
+                                                             name="username"
+                                                             id="loginName"
+                                                             placeholder="请输入你的手机号"/>
+                    </div>
+                    <div class="login-info">密&nbsp;&nbsp;&nbsp;&nbsp;码:&nbsp;<input class="login-info-input"
+                                                                                    id="password"
+                                                                                    type="password"
+                                                                                    name="password"
+                                                                                    placeholder="请输入你的密码"/>
+                    </div>
+                    <div class="login-info">
+                        验证码:
+                        <input class="login-info-input"
+                               id="verification_code"
+                               type="text"
+                               name="verification_code"
+                               style="width: 110px; vertical-align: middle"
+                               placeholder="请输入验证码"/>
+                        <img class=""
+                             id="check_code"
+                             src="../checkCode/creatCheckCode"
+                             name="check_code"
+                             style="width: 105px; height: 42px;vertical-align: middle"
+                             alt="">
+                    </div>
+
+                </div>
+                <div class="login_submit">
+                    <input id="login_button" class="submit" type="button" value="立即登录">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="../../static/js/particles.min.js"></script>
+<script src="../../static/js/app.js"></script>
+
+<!-- jQuery -->
+<script src="../../static/plugin/jquery/jquery.min.js"></script>
+<script src="../../static/js/public.js"></script>
+<script src="../../static/plugin/sweetalert/sweetalert.min.js"></script>
+
+<script>
+    $(function () {
+        //验证码图片点击事件
+        $("#check_code").click(function () {
+            //获取当前时间
+            var date = new Date().getTime();
+            //为验证码图片加时间戳
+            document.getElementById("check_code").src = "../checkCode/creatCheckCode?" + date;
+        })
+
+        //登录按钮点击事件
+        $("#login_button").click(function () {
+            //获取用户手机号
+            var username = $("#loginName").val();
+            //判断手机号是否合法
+            if (!validPhoneNumber(username)) {//手机号不合法
+                swal('请输入正确的手机号', {
+                    icon: "error",
+                });
+                return false;
+            }
+            //手机号合法
+            //获取用户密码
+            var password = $("#password").val();
+            //判断密码是否合法
+            if (!validPassword(password)) {//棉麻不合法
+                swal('请输入正确的密码格式(6-20位字符和数字组合)', {
+                    icon: "error",
+                });
+                return false;
+            }
+            //密码合法
+
+
+            //异步通信
+            //将表单提交到服务器进行登录业务
+            $.post("login", $("#loginForm").serialize(), function (data) {
+                alert(data);
+                if (data === "checkCode_expired") {//服务器返回的数据为checkCode_expired
+                    //验证码已过期
+                    swal('验证码已过期，请重新获取验证码', {
+                        icon: "error",
+                    });
+                    return false;
+                }
+                if (data === "checkCode_error") {//服务器返回的数据为checkCode_error
+                    //验证码错误
+                    swal('验证码错误，请重新获取验证码', {
+                        icon: "error",
+                    });
+                    return false;
+                }
+                if (data === "login_success") {//服务器返回的数据为login_success
+                    //登录成功，跳转到用户个人界面
+                    swal({
+                        title: "登录成功",
+                        text: "是否跳转至个人界面?",
+                        icon: "success",
+                        buttons: true,
+                    }).then((flag) => {
+                        if (flag) {
+                            window.location.href = '';
+                        }
+                    });
+
+                }
+                if (data === "login_error_username") {//服务器返回的数据为login_error_username
+                    //登录失败，账号不存在
+                    swal('登录失败，您输入的账号不存在', {
+                        icon: "error",
+                    });
+                    return false;
+                }
+                if (data === "login_error_password") {//服务器返回的数据为login_error_password
+                    //登录失败，密码错误
+                    swal('登录失败，您输入的密码错误', {
+                        icon: "error",
+                    });
+                    return false;
+                }
+            })
+        })
+    });
+</script>
+
+
+<!--<script type="text/javascript">-->
+<!--    function login() {-->
+<!--        var loginName = $("#loginName").val();-->
+<!--        if (!validPhoneNumber(loginName)) {-->
+<!--            swal('请输入正确的手机号', {-->
+<!--                icon: "error",-->
+<!--            });-->
+<!--            return false;-->
+<!--        }-->
+<!--        var password = $("#password").val();-->
+<!--        if (!validPassword(password)) {-->
+<!--            swal('请输入正确的密码格式', {-->
+<!--                icon: "error",-->
+<!--            });-->
+<!--            return false;-->
+<!--        }-->
+<!--        //验证-->
+<!--        var params = $("#loginForm").serialize();-->
+<!--        var url = '/login';-->
+<!--        $.ajax({-->
+<!--            type: 'POST',//方法类型-->
+<!--            url: url,-->
+<!--            data: params,-->
+<!--            success: function (result) {-->
+<!--                if (result.resultCode == 200) {-->
+<!--                    window.location.href = '/index';-->
+<!--                } else {-->
+<!--                    swal(result.message, {-->
+<!--                        icon: "error",-->
+<!--                    });-->
+<!--                }-->
+<!--                ;-->
+<!--            },-->
+<!--            error: function () {-->
+<!--                swal("操作失败", {-->
+<!--                    icon: "error",-->
+<!--                });-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+<!--</script>-->
+
+
+</html>

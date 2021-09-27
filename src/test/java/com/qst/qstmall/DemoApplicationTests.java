@@ -1,4 +1,4 @@
-package com.qst.demo;
+package com.qst.qstmall;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

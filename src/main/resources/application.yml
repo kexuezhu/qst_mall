@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    password: 17686408168gsr
+    url: jdbc:mysql:///qst_mall_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    static-path-pattern: /static/**
+  view:
+    suffix: "html"
+
+
+
