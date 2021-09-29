@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<footer th:fragment="copy">
+    the content of footer
+</footer>
+1
+2
+3
+4
+fragment的引用
+th:insert:保留自己的主标签，保留th:fragment的主标签。
+th:replace:不要自己的主标签，保留th:fragment的主标签。
+th:include:保留自己的主标签，不要th:fragment的主标签。（官方3.0后不推荐）
+
+
+</body>
+</html>

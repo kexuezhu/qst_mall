@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+导入片段：
+<div th:insert="footer::copy"></div>
+
+<div th:replace="footer::copy"></div>
+
+<div th:include="footer::copy"></div>
+
+结果为:
+<div>
+    <footer>
+        the content of footer
+    </footer>
+</div>
+
+<footer>
+    the content of footer
+</footer>
+
+<div>
+    the content of footer
+</div>
+
+
+
+</body>
+</html>

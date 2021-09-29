@@ -1,11 +1,9 @@
 package com.qst.qstmall.controller;
 
 import com.qst.qstmall.domin.User;
-import com.qst.qstmall.service.LoginService;
-import com.qst.qstmall.service.RegisterService;
+import com.qst.qstmall.service.impl.LoginService;
+import com.qst.qstmall.service.impl.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.http.HttpResponse;
 
 
 @RestController
@@ -117,13 +114,19 @@ public class PersonController {
                     e.printStackTrace();
                 }
             } else {//user不为空，账号正确，判断密码是否正确
-                if (userServer.getPassword() == null) {//user用户密码为空，密码错误
+                if (userServer.getPassword_md5() == null) {//user用户密码为空，密码错误
                     try {
                         response.getWriter().write("login_error_password");//登录失败，返回密码错误信息
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {//user用户密码不为空,密码正确
+                    session.setAttribute("user",user);//将登录成功的用户对象写入服务器session中
+                    //期望客户端关闭后，session也能相同
+                    Cookie cookie = new Cookie("JSESSIONID",session.getId());
+                    cookie.setMaxAge(60 * 60);  //设置cookie存活时间为1个小时
+                    response.addCookie(cookie); //将cookie写入浏览器
+
                     try {
                         response.getWriter().write("login_success");//登录成功，返回登录成功信息
                     } catch (IOException e) {
@@ -140,6 +143,15 @@ public class PersonController {
                 e.printStackTrace();
             }
         }
+    }
+
+    //退出登录
+    @RequestMapping("/logout")
+    public ModelAndView logout(HttpServletRequest request, HttpServletResponse response){
+        HttpSession session = request.getSession();
+        session.removeAttribute("user");
+        ModelAndView modelAndView = new ModelAndView("mall/index.html");
+        return modelAndView;
     }
 
 

@@ -1,67 +1,88 @@
 package com.qst.qstmall.domin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
-/*用户实体类*/
+/*
+    用户实体类
+*/
 public class User {
 
-    //用户名
-    private String username;
-    //密码
-    private String password;
     //用户id
-    private long userId;
+    private long user_id;
+    //用户名
+    private String login_name;
+    //密码
+    private String password_md5;
     //用户昵称
-    private String nickName;
+    private String nick_name;
     //个性签名
-    private String introduceSign;
+    private String introduce_sign;
     //收货地址
     private String address;
     //注销标识字段(0-正常 1-已注销)
-    private boolean isDelete;
+    private boolean is_delete;
     //锁定标识字段(0-未锁定 1-已锁定)
-    private boolean lockedFlag;
+    private boolean locked_flag;
     //注册时间
-    private Date date;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date create_time;
 
-    public String getUsername() {
-        return username;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "user_id=" + user_id +
+                ", login_name='" + login_name + '\'' +
+                ", password_md5='" + password_md5 + '\'' +
+                ", nick_name='" + nick_name + '\'' +
+                ", introduce_sign='" + introduce_sign + '\'' +
+                ", address='" + address + '\'' +
+                ", is_delete=" + is_delete +
+                ", locked_flag=" + locked_flag +
+                ", create_time=" + create_time +
+                '}';
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public long getUser_id() {
+        return user_id;
     }
 
-    public String getPassword() {
-        return password;
+    public void setUser_id(long user_id) {
+        this.user_id = user_id;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public String getLogin_name() {
+        return login_name;
     }
 
-    public long getUserId() {
-        return userId;
+    public void setLogin_name(String login_name) {
+        this.login_name = login_name;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public String getPassword_md5() {
+        return password_md5;
     }
 
-    public String getNickName() {
-        return nickName;
+    public void setPassword_md5(String password_md5) {
+        this.password_md5 = password_md5;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public String getNick_name() {
+        return nick_name;
     }
 
-    public String getIntroduceSign() {
-        return introduceSign;
+    public void setNick_name(String nick_name) {
+        this.nick_name = nick_name;
     }
 
-    public void setIntroduceSign(String introduceSign) {
-        this.introduceSign = introduceSign;
+    public String getIntroduce_sign() {
+        return introduce_sign;
+    }
+
+    public void setIntroduce_sign(String introduce_sign) {
+        this.introduce_sign = introduce_sign;
     }
 
     public String getAddress() {
@@ -72,27 +93,27 @@ public class User {
         this.address = address;
     }
 
-    public boolean isDelete() {
-        return isDelete;
+    public boolean isIs_delete() {
+        return is_delete;
     }
 
-    public void setDelete(boolean delete) {
-        isDelete = delete;
+    public void setIs_delete(boolean is_delete) {
+        this.is_delete = is_delete;
     }
 
-    public boolean isLockedFlag() {
-        return lockedFlag;
+    public boolean isLocked_flag() {
+        return locked_flag;
     }
 
-    public void setLockedFlag(boolean lockedFlag) {
-        this.lockedFlag = lockedFlag;
+    public void setLocked_flag(boolean locked_flag) {
+        this.locked_flag = locked_flag;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreate_time() {
+        return create_time;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreate_time(Date create_time) {
+        this.create_time = create_time;
     }
 }
