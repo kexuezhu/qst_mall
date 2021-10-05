@@ -1,7 +1,7 @@
 package com.qst.qstmall.domin;
 
 /*
-   管理员实体类
+   管理员 实体类
  */
 public class AdminUser {
     //管理员id

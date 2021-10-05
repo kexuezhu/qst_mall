@@ -15,8 +15,8 @@ public class LoginService implements LoginInterface {
     @Autowired
     private UserMapper userMapper;
 
-    //重写登录验证
     @Override
+    //重写登录验证
     public User login(User user) {
         //创建一个新的User对象用于接收服务器返回的User对象
         User userServer = userMapper.register_check(user);//只返回账号
@@ -30,13 +30,15 @@ public class LoginService implements LoginInterface {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            //获取数据库中的用户信息
+            User get_user = userMapper.login_check(user);
             //验证密码
-            if (userMapper.login_check(user) == null) {//密码错误，登录失败
+            if (get_user == null) {//密码错误，登录失败
                 //返回用户账号
                 return userServer;
             } else {//账号密码正确，登录成功
-                //返回用户账号密码
-                return user;
+                //返回用户全部信息
+                return get_user;
             }
         }
     }

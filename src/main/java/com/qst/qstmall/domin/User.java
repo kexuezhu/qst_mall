@@ -2,10 +2,11 @@ package com.qst.qstmall.domin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /*
-    用户实体类
+    用户 实体类
 */
 public class User {
 
@@ -28,6 +29,9 @@ public class User {
     //注册时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date create_time;
+
+    //我的购物车（根据商品id确定购物车内的商品）
+    private ArrayList<Long> myShoppingCart;
 
 
     @Override
@@ -115,5 +119,13 @@ public class User {
 
     public void setCreate_time(Date create_time) {
         this.create_time = create_time;
+    }
+
+    public ArrayList<Long> getMyShoppingCart() {
+        return myShoppingCart;
+    }
+
+    public void setMyShoppingCart(ArrayList<Long> myShoppingCart) {
+        this.myShoppingCart = myShoppingCart;
     }
 }

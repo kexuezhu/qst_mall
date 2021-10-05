@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /*
-    轮播图实体类
+    轮播图 实体类
  */
 public class Carousel {
     //首页轮播图主键id

@@ -16,8 +16,8 @@ public class CarouselService implements CarouselInterface {
     @Autowired
     private CarouselMapper carouselMapper;
 
-    //重写获取轮播图方法
     @Override
+    //重写获取轮播图方法
     public ArrayList<Carousel> getCarousel() {
         //获取数据库中的查询出的轮播图集合
         ArrayList<Carousel> carousels = carouselMapper.select_carousels();

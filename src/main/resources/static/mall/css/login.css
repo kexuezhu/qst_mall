@@ -23,7 +23,7 @@ body {
 .form {
     width: 1130px;
     height: 588px;
-    background: url("../../goods-img/login_bg-1.jpg") no-repeat center center;
+    background: url("../../mall/image/login_bg-1.jpg") no-repeat center center;
 }
 
 .form .login {
@@ -157,7 +157,7 @@ body {
 .form_register {
     width: 1130px;
     height: 588px;
-    background: url("../../goods-img/商城图片.jpg") no-repeat center center;
+    background: url("../../mall/image/商城图片.jpg") no-repeat center center;
 }
 .form_register .login {
     width: 400px;

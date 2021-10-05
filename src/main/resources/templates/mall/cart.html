@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>青软商城-购物车</title>
+    <link rel="stylesheet" th:href="@{mall/css/iconfont.css}">
+    <link rel="stylesheet" th:href="@{mall/css/common.css}">
+    <link rel="stylesheet" th:href="@{mall/styles/header.css}">
+    <link rel="stylesheet" th:href="@{mall/styles/cart.css}">
+    <link rel="stylesheet" th:href="@{/admin/plugins/sweetalert/sweetalert.css}"/>
+</head>
+<body>
+<header th:replace="mall/header::header-fragment"></header>
+
+<div id="cart">
+    <div class="banner_x center">
+        <a th:href="@{/index.html}" target="_blank">
+            <div class="logo fl">
+                <img src="mall/image/qst-logo-3.png"/>
+            </div>
+        </a>
+
+        <div class="wdgwc fl ml20">购物车</div>
+        <div class="wxts fl ml20">温馨提示：产品是否购买成功，以最终下单为准哦，请尽快结算</div>
+        <div class="clear"></div>
+    </div>
+    <div class="cart_line"></div>
+    <div class="cart_bg">
+        <th:block th:if="${#lists.isEmpty(userShoppingCarts)}">
+            <div class="list center" style="text-align: center">
+                <img th:src="@{mall/image/emptyCart.png}" style="margin-top: 20px">购物车中还没有商品，赶紧去选购吧！
+                <a href="/index.html" style="color: #1baeae">返回首页>></a>
+            </div>
+        </th:block>
+        <th:block th:unless="${#lists.isEmpty(userShoppingCarts)}">
+            <div class="list center">
+                <div class="top2 center">
+                    <div class="sub_top fl"><input type="checkbox" name="checkAll" id="checkAll">全选</div>
+                    <div class="sub_top fl">商品名称</div>
+                    <div class="sub_top fl">单价</div>
+                    <div class="sub_top fl">数量</div>
+                    <div class="sub_top fl">小计</div>
+                    <div class="sub_top fr">操作</div>
+                    <div class="clear"></div>
+                </div>
+                <th:block th:each="userShoppingCart:${userShoppingCarts}">
+                    <div class="content2 center" th:id="${'content2'+userShoppingCart.cart_item_id}">
+                        <div class="sub_content fl ">
+                            <input type="checkbox" class="checkItem" th:id="${userShoppingCart.cart_item_id}">
+                        </div>
+                        <div class="sub_content cover fl">
+                            <img th:src="@{${userShoppingCart.goods_cover_img}}">
+                        </div>
+                        <div class="sub_content fl ft20">
+                            <a th:text="${userShoppingCart.goods_name}"
+                               th:href="@{'/goods/detail?goods_id='+${userShoppingCart.goods_id}}">商品名称</a>
+                        </div>
+                        <th:block>
+                            <!--                        <th:block th:if="${item.promotionStatus==2}">-->
+                            <div class="sub_content fl" th:id="${'sellingPrice'+userShoppingCart.cart_item_id}"
+                                 th:text="${userShoppingCart.original_price+'元'}">
+                                1299元
+                            </div>
+                        </th:block>
+
+                        <div class="sub_content fl">
+                            <input class="goods_count" th:id="${'goodsCount'+userShoppingCart.cart_item_id}" type="number"
+                                   th:onchange="'updateItem('+${userShoppingCart.cart_item_id}+')'"
+                                   th:value="${userShoppingCart.goods_count}" step="1" min="1"
+                                   max="5">
+                        </div>
+
+
+                        <th:block>
+                            <!--                        <th:block th:if="${item.promotionStatus==2}">-->
+                            <div class="sub_content fl" th:id="${'itemPrice'+userShoppingCart.cart_item_id}"
+                                 th:text="${userShoppingCart.goods_count*userShoppingCart.original_price+'元'}">1299元
+                            </div>
+                        </th:block>
+
+
+                        <!--                        <th:block th:unless="${item.promotionStatus==2}">-->
+                        <!--                            <div class="sub_content fl" th:id="${'itemPrice'+item.cartItemId}"-->
+                        <!--                                 th:text="${item.goodsCount*item.originalPrice+'元'}">1299元-->
+                        <!--                            </div>-->
+                        <!--                        </th:block>-->
+
+
+                        <div class="sub_content fl"><a href="##"
+                                                       th:onclick="'deleteItem('+${userShoppingCart.cart_item_id}+')'">×</a>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </th:block>
+            </div>
+        </th:block>
+        <div class="pre_order mt20 center">
+            <div class="tips fl ml20">
+                <ul>
+                    <li><a th:href="@{/index.html}">继续购物</a></li>
+                    <li>|</li>
+                    <li>已选择<span id="totalCount">0</span>件商品</li>
+                    <li><a href="##" th:onclick="${#lists.isEmpty(userShoppingCarts)}?false:'empty()'">清空购物车</a></li>
+                    <div class="clear"></div>
+                </ul>
+            </div>
+            <div class="order_div fr">
+                <div class="order_total fl">合计（不含运费）：<span id="priceTotal">0.00元</span></div>
+                <div class="order_button fr">
+                    <input class="order_button_d" type="button" name="settle"
+                           onclick="settle()" value="去结算"/>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<div th:replace="mall/footer::footer-fragment"></div>
+
+</body>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.js}"></script>
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script type="text/javascript">
+    /**
+     * 全选
+     * */
+    $("#checkAll").on("click", function () {
+        $('.checkItem').each(function () {
+            $(this).prop("checked", $("#checkAll").is(":checked"));
+        })
+    })
+    $('.checkItem').on('click', function () {
+        var f = true;
+        $('.checkItem').each(function () {
+            if (!$(this).prop("checked")) {
+                f = false;
+            }
+        })
+        if (f) {
+            $("#checkAll").prop('checked', true);
+        } else {
+            $("#checkAll").prop('checked', false);
+        }
+    })
+
+    /**
+     * 统计修改
+     * */
+    $('.checkItem,.goods_count,#checkAll').on('change', function () {
+        var totalPrice = 0;
+        var totalCount = 0;
+        for (var i = 0; i < $(".checkItem").length; i++) {
+            var checkbox = $(".checkItem")[i];
+            var id = checkbox.id;
+            if (checkbox.checked) {
+                var sellingPriceId = 'sellingPrice' + id;
+                var goodsCountId = 'goodsCount' + id;
+                var sellingPriceStr = $("#" + sellingPriceId).text();
+                var sellingPrice = sellingPriceStr.substring(0, sellingPriceStr.length - 1)
+                var goodsCount = $("#" + goodsCountId).val();
+                var itemPrice = sellingPrice * goodsCount;
+                totalPrice += itemPrice;
+                totalCount += parseInt(goodsCount);
+            }
+        }
+        $('#priceTotal').text(totalPrice + '.00元')
+        $('#totalCount').text(totalCount)
+    })
+
+    /**
+     * 背景颜色修改
+     * */
+    $('.checkItem,#checkAll').on('click', function () {
+        $('.checkItem').each(function () {
+            var id = $(this).attr('id')
+            if ($(this).prop("checked")) {
+                $('#content2' + id).css('background', '#fff3cd');
+            } else {
+                $('#content2' + id).css('background', 'none');
+            }
+        })
+    });
+
+    /**
+     *更新购物项(修改商品数量)
+     */
+    function updateItem(id) {
+        var goodsCountId = 'goodsCount' + id;
+        var goodsCount = $("#" + goodsCountId).val();
+        var sellingPriceId = 'sellingPrice' + id;
+        var sellingPriceStr = $("#" + sellingPriceId).text();
+        var sellingPrice = sellingPriceStr.substring(0, sellingPriceStr.length - 1)
+        if (goodsCount > 5) {
+            swal("单个商品最多可购买5个", {
+                icon: "error",
+            });
+            $("#" + domId).prop("value", 5)
+            return;
+        }
+        if (goodsCount < 1) {
+            swal("最少购买一件", {
+                icon: "error",
+            });
+            $("#" + domId).prop("value", 1)
+            return;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/update-shop-cart',
+            contentType: 'application/json',
+            data: {"cart_item_id": id, "goods_count": goodsCount},
+            success: function (result) {
+                if (result == 200) {
+                    //window.location.reload();
+                    $('#itemPrice' + id).html(goodsCount * sellingPrice + '元')
+                } else {
+                    swal("操作失败", {
+                        icon: "error",
+                    });
+                }
+            },
+            error: function () {
+                swal("操作失败", {
+                    icon: "error",
+                });
+            }
+        });
+    }
+
+    /**
+     * * 删除购物项
+     * @param id
+     */
+    function deleteItem(id) {
+        swal({
+            title: "确认弹框",
+            text: "确认要删除数据吗?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((flag) => {
+                if (flag) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/delete-shop-cart?cart_item_id=' + id,
+                        success: function (result) {
+                            if (result == 200) {
+                                window.location.reload();
+                            } else {
+                                swal("操作失败", {
+                                    icon: "error",
+                                });
+                            }
+                        },
+                        error: function () {
+                            swal("操作失败", {
+                                icon: "error",
+                            });
+                        }
+                    });
+                }
+            }
+        );
+    }
+
+    /**
+     * 清空购物车
+     * */
+    function empty() {
+        swal({
+            title: "确认要清空购物车吗?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((flag) => {
+                if (flag) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/delete-shop-cart-all',
+                        success: function (result) {
+                            if (result == 200) {
+                                window.location.reload();
+                            } else {
+                                swal("操作失败", {
+                                    icon: "error",
+                                });
+                            }
+                        },
+                        error: function () {
+                            swal("操作失败", {
+                                icon: "error",
+                            });
+                        }
+                    });
+                }
+            }
+        );
+    }
+
+    /**
+     * 跳转至结算页面
+     */
+    function settle() {
+        var totalCount = $('#totalCount').text();
+        if (totalCount == 0) {
+            swal("请选择要结算的商品", {
+                icon: "error",
+            });
+            return false;
+        }
+        var id_array = new Array();
+        $('.checkItem:checked').each(function () {
+            id_array.push($(this).attr('id'));
+        });
+        window.location.href = '/shop-cart/settle?cartItemIds=' + id_array
+    }
+</script>
+</html>

@@ -17,8 +17,8 @@ public class RegisterService implements RegisterInterface {
     @Autowired
     private UserMapper userMapper;
 
-    //重写注册验证
     @Override
+    //重写注册验证
     public User register(User user) {
         if(userMapper.register_check(user) == null){    //账号不存在，可以进行注册
             //对密码进行md5加密

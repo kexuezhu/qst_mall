@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="mall/header::head-fragment('青软商城-商品详情','detail')">
+</head>
+<body>
+<header th:replace="mall/header::header-fragment"></header>
+
+<div id="detail">
+    <!-- nav -->
+    <nav th:replace="mall/header::nav-fragment"></nav>
+    <div class="dc">
+        <div class="content w">
+            <div class="title fl">商品详情</div>
+            <nav class="fr">
+                <li><a href="##">概述</a></li>
+                <li>|</li>
+                <li><a href="##">详情</a></li>
+                <li>|</li>
+                <li><a href="##">用户评价</a></li>
+                <div class="clear"></div>
+            </nav>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+    <div class="intro mt20 w clearfix">
+        <div class="left fl" style="position: relative;">
+            <div class="swiper-container fl">
+                <div class="swiper-wrapper">
+                    <!-- 配置了轮播图则显示后台配置的轮播图 -->
+                    <th:block th:unless="${#lists.isEmpty(goodsInfo.goods_carouselList)}">
+                        <th:block th:each="carousel:${goodsInfo.goods_carouselList}">
+                            <div class="swiper-slide">
+                                <img th:src="@{${carousel}}" alt="">
+                            </div>
+                        </th:block>
+                    </th:block>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <!-- <img th:src="@{${goodsDetail.goodsCoverImg}}">-->
+            </div>
+        </div>
+        <div class="right fr">
+            <input type="hidden" id="endTime">
+
+
+            <div class="h3 ml20 mt20" th:text="${goodsInfo.goods_name}">QSTMall</div>
+            <div class="sub_title mr40 ml20 mt10" th:text="${goodsInfo.goods_intro}">QSTMall</div>
+            <div class="item_price mr40 mt10">
+                <th:block th:text="'售价' + ${goodsInfo.original_price} + '.00 元'"></th:blockth>
+                    <th:block>
+                        <del>
+                            <th:block></th:block>
+                        </del>
+                    </th:block>
+                </th:block>
+            </div>
+            <th:block>
+                <div class="tip">
+                    <h2>该商品已下架</h2>
+                </div>
+            </th:block>
+            <th:block>
+                <div class="order">
+                    <input class="addBtn min" id="btn-reduce" type="button" value="-"/>
+                    <input class="item-number" id="buy-num" type="text" value="1">
+                    <input class="addBtn add" id="btn-add" type="button" value="+"/>
+                    <input class="car" id="saveAndToCart" type="button" value="立即选购"/>
+                    <input class="car" th:onclick="'saveToCart(' + ${goodsInfo.goods_id} + ')'" type="button"
+                           value="加入购物车"/>
+                </div>
+            </th:block>
+
+            <div class="tb-extra ml20" id="J_tbExtra">
+                <dl>
+                    <dt>承诺</dt>
+                    <dd>
+                        <a class="J_Cont" title="满足7天无理由退换货申请的前提下，包邮商品需要买家承担退货邮费，非包邮商品需要买家承担发货和退货邮费。" href="#"
+                           target="_blank">
+                            <img>7天无理由
+                            <img th:src="@{/mall/image/7d.jpg}">7天无理由
+                        </a>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>支付</dt>
+                    <dd>
+                        <a href="##" target="_blank">
+                            <img>蚂蚁花呗
+                            <img th:src="@{/mall/image/hua.png}">蚂蚁花呗
+                        </a>
+                        <a href="##" target="_blank">
+                            <img>信用卡支付
+                            <img th:src="@{/mall/image/card.png}">信用卡支付
+                        </a>
+                        <a href="##" target="_blank">
+                            <img>集分宝
+                            <img th:src="@{/mall/image/ji.png}">集分宝
+                        </a>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>支持</dt>
+                    <dd>折旧变现，买新更省钱。<a style="float:none;text-decoration: underline;" href="##">详情</a></dd>
+                </dl>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="tab-main">
+        <div class="tab">
+            <ul>
+                <li class="current">商品介绍</li>
+                <li>商品评价</li>
+                <li>售后保障</li>
+            </ul>
+        </div>
+    </div>
+    <!-- 这里使用的是 th:utext 标签，用 th:text 不会解析 html，用 th:utext 会解析 html -->
+    <div class="goods mt20 w clearfix"></div>
+    <!--    <div class="goods mt20 w clearfix" th:utext="${goodsDetail.goodsDetailContent}"></div>-->
+</div>
+<div th:replace="mall/footer::footer-fragment"></div>
+</body>
+
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.js}" type="text/javascript"></script>
+\
+<script th:src="@{/mall/js/swiper.min.js}" type="text/javascript"></script>
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/mall/js/detail.js}" type="text/javascript"></script>
+<script th:src="@{/mall/js/search.js}" type="text/javascript"></script>
+
+<script>
+
+    function saveToCart(goods_id) {
+        var user_id = $("#user").attr('name');
+        if (user_id == null) {
+            swal({
+                title: "未登录账号",
+                text: "是否跳转至登录页?",
+                icon: "error",
+                buttons: true,
+            }).then((flag) => {
+                if (flag) {
+                    window.location.href = '/user/login.html';
+                }
+            });
+            return false;
+        }
+        var goods_count = $("#buy-num").val();
+        if (goods_count > 5) {
+            swal('最多只能购买5个', {
+                icon: "error",
+            });
+        } else {
+            $.get("/add-shop-cart", {
+                "user_id": user_id,
+                "goods_id": goods_id,
+                "goods_count": goods_count
+            }, function (data) {
+                if (data == "add") {
+                    swal('已成功添加到购物车', {
+                        icon: "success",
+                        button: true
+                    }).then((flag) => {
+                        if (flag) {
+                            location.reload();
+                        }
+                    })
+                }
+                if (data == "update") {
+                    swal('您的购物车中已有此商品，已成功添加到购物车', {
+                        icon: "success",
+                        button: true
+                    }).then((flag) => {
+                        if (flag) {
+                            location.reload();
+                        }
+                    })
+                }
+                if (data == "exceed_max") {
+                    swal('您选择的商品数量已达上限，商品添加失败', {
+                        icon: "error",
+                        button: true
+                    }).then((flag) => {
+                        if (flag) {
+                            location.reload();
+                        }
+                    })
+                }
+            })
+        }
+
+
+    }
+
+
+</script>
+
+
+</html>

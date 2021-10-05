@@ -57,6 +57,10 @@ public class CheckCodeController {
 
         HttpSession session = request.getSession();//获取服务器中的session对象
         session.setAttribute("checkCode", string);//将验证码字符串添加到session中
+        //期望客户端关闭后，session也能相同
+        Cookie cookie = new Cookie("JSESSIONID",session.getId());
+        cookie.setMaxAge(60 * 60);  //设置cookie存活时间为1个小时
+        response.addCookie(cookie); //将cookie写入浏览器
 
 
         //2.4 画干扰线

@@ -19,12 +19,16 @@ public interface GoodsCategoryMapper {
     @Select("select * from tb_qst_mall_goods_category where category_level = 1")
     ArrayList<GoodsCategoryLevelFirst> select_LevelFirsts();
 
-    //根据商品分类等级查询1级分类商品所有信息
+    //根据商品分类等级查询2级分类商品所有信息
     @Select("select * from tb_qst_mall_goods_category where category_level = 2")
     ArrayList<GoodsCategoryLevelSecond> select_LevelSeconds();
 
-    //根据商品分类等级查询1级分类商品所有信息
+    //根据商品分类等级查询3级分类商品所有信息
     @Select("select * from tb_qst_mall_goods_category where category_level = 3")
     ArrayList<GoodsCategoryLevelThird> select_LevelThirds();
+
+    //根据商品分类id查询对应商品所有信息
+    @Select("SELECT * FROM tb_qst_mall_goods_category WHERE category_id = #{category_id}")
+    GoodsCategoryLevelThird select_category_id(long category_id);
 
 }

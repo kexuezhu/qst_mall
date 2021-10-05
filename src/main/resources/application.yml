@@ -8,9 +8,25 @@ spring:
     url: jdbc:mysql:///qst_mall_db
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
-    static-path-pattern: /static/**
+    static-path-pattern: /**
+#  resources:
+#    static-locations:
+#      classpath: /static/
+#  thymeleaf:
+#    prefix: classpath:/templates/
+#    suffix: .html
+#    servlet:
+#      content-type: text/html
+#    encoding: utf-8
+#    mode: LEGACYHTML5
+#    cache: false
   view:
     suffix: "html"
 
 
-
+# 分页配置
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: !!str true
+  params: count=countSql

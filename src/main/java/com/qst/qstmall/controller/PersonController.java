@@ -3,13 +3,13 @@ package com.qst.qstmall.controller;
 import com.qst.qstmall.domin.User;
 import com.qst.qstmall.service.impl.LoginService;
 import com.qst.qstmall.service.impl.RegisterService;
+import com.qst.qstmall.service.impl.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -24,12 +24,14 @@ public class PersonController {
     private RegisterService registerService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private ShoppingCartService shoppingCartService;
 
     //跳转到登录界面
     @RequestMapping("/login.html")
     public ModelAndView loginHtml() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("mall/login.html");
+        modelAndView.setViewName("mall/login");
         return modelAndView;
     }
 
@@ -37,7 +39,7 @@ public class PersonController {
     @RequestMapping("/register.html")
     public ModelAndView registerHtml() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("mall/register.html");
+        modelAndView.setViewName("mall/register");
         return modelAndView;
     }
 
@@ -121,12 +123,9 @@ public class PersonController {
                         e.printStackTrace();
                     }
                 } else {//user用户密码不为空,密码正确
-                    session.setAttribute("user",user);//将登录成功的用户对象写入服务器session中
-                    //期望客户端关闭后，session也能相同
-                    Cookie cookie = new Cookie("JSESSIONID",session.getId());
-                    cookie.setMaxAge(60 * 60);  //设置cookie存活时间为1个小时
-                    response.addCookie(cookie); //将cookie写入浏览器
-
+                    session.setAttribute("user",userServer);//将登录成功的用户对象写入服务器session中
+                    //获取当前用户最新购物车商品数量并写入session
+                    shoppingCartService.session_myShopping_count(request,response);
                     try {
                         response.getWriter().write("login_success");//登录成功，返回登录成功信息
                     } catch (IOException e) {
@@ -148,9 +147,11 @@ public class PersonController {
     //退出登录
     @RequestMapping("/logout")
     public ModelAndView logout(HttpServletRequest request, HttpServletResponse response){
+        //获取服务器中的session
         HttpSession session = request.getSession();
+        //移除user对象
         session.removeAttribute("user");
-        ModelAndView modelAndView = new ModelAndView("mall/index.html");
+        ModelAndView modelAndView = new ModelAndView("mall/login");
         return modelAndView;
     }
 
