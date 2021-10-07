@@ -28,6 +28,9 @@ public interface ShoppingCartInterface {
     String deleteShoppingCart(long cart_item_id);
 
     //声明根据购物项id，查询对应购物车商品信息
-    String getItemShoppingCart(long cart_item_id, int goods_count);
+    ShoppingCartItem getItemShoppingCart(long cart_item_id);
+
+    //声明根据购物项id，修改对应购物车商品信息
+    String updateItemShoppingCart(long cart_item_id, int goods_count);
 
 }

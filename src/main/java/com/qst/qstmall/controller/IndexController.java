@@ -60,15 +60,11 @@ public class IndexController {
         //新品上新商品信息集合    config_type=4（新品上新）
         ArrayList<GoodsInfo> new_goodsInfos = goodsInfoService.getGoodsInfo_index(4);
 
-        ArrayList<GoodsInfo> goodsInfo_index = goodsInfoService.getGoodsInfo_index(5);
-//        int count = goodsInfo_index.size();
-//        try {
-//            response.getWriter().write(count);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         //为你推荐商品信息集合    config_type=5（为你推荐）
+        ArrayList<GoodsInfo> goodsInfo_index = goodsInfoService.getGoodsInfo_index(5);
+        int index_count = goodsInfo_index.size();//获取商城主页的分页数据总数
+
+
         if(request.getParameter("pageNum") != null){
             pageNum = Integer.parseInt(request.getParameter("pageNum"));
         }
@@ -89,41 +85,34 @@ public class IndexController {
 
 
         //展示商城主页视图
-        ModelAndView modelAndView = new ModelAndView("mall/index.html");
+        ModelAndView modelAndView = new ModelAndView("mall/index");
         modelAndView.addObject("categories", goodsCategoryLevelFirsts);//添加商品分类信息
         modelAndView.addObject("carousels",carousels);//添加轮播图信息
         modelAndView.addObject("hot_goodsInfos",hot_goodsInfos);//添加热销商品信息
         modelAndView.addObject("new_goodsInfos",new_goodsInfos);//添加新品上新信息
         modelAndView.addObject("recommend_goodsInfos",list);//添加为你推荐信息
+        modelAndView.addObject("index_count",index_count);//添加商城主页的分页数据总数
         return modelAndView;
     }
 
     @RequestMapping("/index_recommend")
-    public void index_recommend(HttpServletRequest request, HttpServletResponse response){
-        //为你推荐商品信息集合    config_type=5（为你推荐）
+    public void index_recommend(HttpServletRequest request){
         if(request.getParameter("pageNum") != null){
             pageNum = Integer.parseInt(request.getParameter("pageNum"));
         }
         if(request.getParameter("pageSize") != null){
             pageSize = Integer.parseInt(request.getParameter("pageSize"));
         }
-        ArrayList<GoodsInfo> goodsInfo_index = goodsInfoService.getGoodsInfo_index(5);
-        int count = goodsInfo_index.size();
-        String count_str = "" + count;
-        try {
-            response.getWriter().write(count_str);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         //为你推荐商品信息集合    config_type=5（为你推荐）
         ArrayList<GoodsInfo> recommend_goodsInfos = goodsInfoService.getGoodsInfo_indexPage(5,pageNum,pageSize);
 
         //将分页商品信息集合封装成PageInfo集合
-        PageInfo<GoodsInfo> GoodsInfos = new PageInfo<>(recommend_goodsInfos);
-        List<GoodsInfo> list = GoodsInfos.getList();
+        PageInfo<GoodsInfo> goodsInfos = new PageInfo<>(recommend_goodsInfos);
+        List<GoodsInfo> list = goodsInfos.getList();
 
         request.setAttribute("recommend_goodsInfos",list);//添加为你推荐信息
-        request.setAttribute("count",count_str);
+
     }
 
 

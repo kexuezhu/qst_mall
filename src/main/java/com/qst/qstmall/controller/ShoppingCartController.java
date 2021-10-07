@@ -5,12 +5,16 @@ import com.qst.qstmall.domin.ShoppingCartItem;
 import com.qst.qstmall.domin.User;
 import com.qst.qstmall.service.impl.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class ShoppingCartController {
@@ -25,7 +29,8 @@ public class ShoppingCartController {
         //获取session中的user对象
         User user = (User) session.getAttribute("user");
         if (user == null){
-            return new ModelAndView("error/error_400");
+            ModelAndView modelAndView = new ModelAndView("mall/login");
+            return modelAndView;
         }
         //通过user_id获取对应的购物车商品信息集合
         ArrayList<ShoppingCartItem> userShoppingCarts = shoppingCartService.getUserShoppingCart(user.getUser_id());
@@ -80,8 +85,7 @@ public class ShoppingCartController {
             return null;//向客户端返回空
         }
         //删除成功，修改我的商品数量
-        //获取当前用户最新购物车商品数量并写入session
-        shoppingCartService.session_myShopping_count(request,response);
+        shoppingCartService.session_myShopping_count(request,response);//获取当前用户最新购物车商品数量并写入session
 
         //向客户端返回删除成功信息 "200"
         return "200";
@@ -115,7 +119,7 @@ public class ShoppingCartController {
     //更新购物车
     @GetMapping("/update-shop-cart")
     public String updateCart(long cart_item_id, int goods_count,HttpServletRequest request,HttpServletResponse response){
-        String s = shoppingCartService.getItemShoppingCart(cart_item_id, goods_count);
+        String s = shoppingCartService.updateItemShoppingCart(cart_item_id, goods_count);
         if(s != "success"){//更新失败
             return null;//返回空
         }
@@ -126,5 +130,26 @@ public class ShoppingCartController {
 
     }
 
+    //处理购物车页面（cart.html）结算请求
+    @GetMapping("/settle-shop-cart")
+    public ModelAndView settleCart(String cart_item_id,HttpServletRequest request,HttpServletResponse response){
+        /*将包含所有购物项id的字符串转换为list集合*/
+        List<Long> cart_item_ids= Arrays.asList(cart_item_id.split(",")).stream().map(s -> Long.parseLong(s.trim())).collect(Collectors.toList());
+        //创建购物车商品信息集合缓存对象
+        ArrayList<ShoppingCartItem> shoppingCartItems = new ArrayList<>();
+        //创建商品总价格对象
+        int total_price = 0;
+        //遍历商品项id
+        for (Long cartItemId : cart_item_ids) {
+            ShoppingCartItem itemShoppingCart = shoppingCartService.getItemShoppingCart(cartItemId);//通过购物项id获取购物车商品信息
+            total_price += itemShoppingCart.getTotal_price();//将各个商品价格相加
+            shoppingCartItems.add(itemShoppingCart);//将获取的购物车商品信息添加到缓存对象中
+        }
+
+        ModelAndView modelAndView = new ModelAndView("mall/order-settle");
+        modelAndView.addObject("mySettleShoppingCartItems",shoppingCartItems);//添加需要结算的所有商品信息
+        modelAndView.addObject("priceTotal",total_price);//添加商品总价格
+        return modelAndView;
+    }
 
 }

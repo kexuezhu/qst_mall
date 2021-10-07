@@ -315,7 +315,7 @@
         $('.checkItem:checked').each(function () {
             id_array.push($(this).attr('id'));
         });
-        window.location.href = '/shop-cart/settle?cartItemIds=' + id_array
+        window.location.href = '/settle-shop-cart?cart_item_id=' + id_array
     }
 </script>
 </html>

@@ -4,6 +4,7 @@
 </head>
 <body>
 <header th:replace="mall/header::header-fragment"></header>
+<div class="headers-region"></div>
 <div id="content">
     <nav th:replace="mall/header::nav-fragment"></nav>
     <div id="banner">
@@ -204,7 +205,8 @@
                         </a>
                     </li>
                 </th:block>
-                <div id="test1"></div>
+                <div id="test1" style="text-align: center"></div>
+                <input type="hidden" id="index_count" th:value="${index_count}">
             </th:block>
 
             <!-- 未配置则显示默认 -->
@@ -380,12 +382,11 @@
 
 <script th:src="@{/layui/layui.js}" type="text/javascript"></script>
 <script>
-    var count = 15;
     layui.use('laypage', function () {
         var laypage = layui.laypage;
         laypage.render({
             elem: 'test1'
-            , count: count//数据总数，从服务端得到
+            , count: $("#index_count").val()//数据总数，从服务端得到
             , limit: 5
             , curr: location.hash.replace('#!fenye=', '') //获取起始页
             , hash: 'fenye' //自定义hash值
@@ -397,9 +398,7 @@
                 //首次不执行
                 if (!first) {
                     //do something
-                    $.get("index_recommend", {pageNum: obj.curr, pageSize: obj.limit}, function (data) {
-                        count = data;
-                        // alert(count);
+                    $.get("/index_recommend", {pageNum: obj.curr, pageSize: obj.limit}, function (data) {
                         location.reload();
                         // $('#recommend').replaceAll();
                     })

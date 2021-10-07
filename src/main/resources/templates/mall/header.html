@@ -23,12 +23,12 @@
                 <div class="user" id="user" th:name="${session.user.user_id}">
                     <ul class="selector">
                         <li>
-                            <a>
+                            <a th:href="@{/user/personal.html}">
                                 个人中心
                             </a>
                         </li>
                         <li>
-                            <a>
+                            <a th:href="@{/user/my-orders.html}">
                                 我的订单
                             </a>
                         </li>

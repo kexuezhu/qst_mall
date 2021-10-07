@@ -51,15 +51,11 @@
                              src="../checkCode/creatCheckCode"
                              style="width: 105px; height: 42px; vertical-align: middle"
                              name="check_code">
-                        <!--                        <input class="login-info-input"-->
-                        <!--                               type="submit"-->
-                        <!--                               style="width: 98px; height: 42px; border: 0px"-->
-                        <!--                               value="获取验证码"/>-->
+
                     </div>
 
                 </div>
                 <div class="login_submit">
-                    <!--                                        <input class="submit" type="button" onclick="register()" value="立即注册">-->
                     <input id="register_button" class="submit" type="button" value="立即注册">
                 </div>
             </form>
@@ -112,8 +108,7 @@
 
             //异步通信
             //将表单提交到服务器进行注册业务
-            $.post("register", $("#registerForm").serialize(), function (data) {
-                alert(data);
+            $.post("/user/register", $("#registerForm").serialize(), function (data) {
                 if (data === "checkCode_expired") {//服务器返回的数据为checkCode_expired
                     //验证码已过期
                     swal('验证码已过期，请重新获取验证码', {

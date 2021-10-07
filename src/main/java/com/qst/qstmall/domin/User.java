@@ -46,6 +46,7 @@ public class User {
                 ", is_delete=" + is_delete +
                 ", locked_flag=" + locked_flag +
                 ", create_time=" + create_time +
+                ", myShoppingCart=" + myShoppingCart +
                 '}';
     }
 

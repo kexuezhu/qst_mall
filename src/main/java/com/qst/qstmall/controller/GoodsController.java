@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,7 +21,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 public class GoodsController {
     @Autowired
     private GoodsInfoService goodsInfoService;
@@ -29,22 +30,25 @@ public class GoodsController {
 
     //跳转到商品详情页
     @GetMapping("/goods/detail")
-    public String detailHtml(HttpServletRequest request) {
+    public ModelAndView detailHtml(HttpServletRequest request) {
         //获取请求参数中的goods_id
         if (request.getParameter("goods_id") == null) {//如果请求参数goods_id值为空
-            return "error/error_404";  //返回页面404错误
+            //返回页面404错误
+            ModelAndView modelAndView = new ModelAndView("error/error_404");
+            return modelAndView;
         }
         long goods_id = Long.valueOf(request.getParameter("goods_id"));
         //根据请求的商品id，返回对应的商品信息对象
         GoodsInfo goodsInfo = goodsInfoService.getGoodsInfo(goods_id);
-        request.setAttribute("goodsInfo", goodsInfo);    //添加商品信息对象
 
-        return "mall/detail";
+        ModelAndView modelAndView = new ModelAndView("mall/detail");
+        modelAndView.addObject("goodsInfo",goodsInfo);//添加商品信息对象
+        return modelAndView;
     }
 
     //商品三级分类跳转到商品搜索页
     @GetMapping("/search.html")
-    public String searchHtml(HttpServletRequest request) {
+    public ModelAndView searchHtml(HttpServletRequest request) {
         //商品信息集合缓存对象
         ArrayList<GoodsInfo> goodsInfos = new ArrayList<>();
         //获取请求参数中的商品分类id
@@ -67,8 +71,22 @@ public class GoodsController {
             }
         }
 
-        request.setAttribute("goodsInfos", goodsInfos);//添加商品信息集合
-        return "mall/search";
+        ModelAndView modelAndView = new ModelAndView("mall/search");
+        modelAndView.addObject("goodsInfos",goodsInfos);//添加商品信息集合
+        return modelAndView;
+    }
+
+    //通过搜索引擎跳转到商品搜索页
+    @RequestMapping("/search")
+    public ModelAndView search(HttpServletRequest request){
+        //获取请求参数中的关键词
+        String keyword = request.getParameter("keyword");
+        //根据关键词查询对应商品信息集合
+        ArrayList<GoodsInfo> goodsInfo_goods_name = goodsInfoService.getGoodsInfo_goods_name(keyword);
+
+        ModelAndView modelAndView = new ModelAndView("mall/search");
+        modelAndView.addObject("goodsInfos",goodsInfo_goods_name);
+        return modelAndView;
     }
 
 

@@ -106,7 +106,7 @@
 
             //异步通信
             //将表单提交到服务器进行登录业务
-            $.post("login", $("#loginForm").serialize(), function (data) {
+            $.post("/user/login", $("#loginForm").serialize(), function (data) {
                 // alert(data);
                 if (data === "checkCode_expired") {//服务器返回的数据为checkCode_expired
                     //验证码已过期

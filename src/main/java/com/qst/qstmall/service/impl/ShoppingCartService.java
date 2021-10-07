@@ -29,19 +29,19 @@ public class ShoppingCartService implements ShoppingCartInterface {
 
     @Override
     //声明获取当前用户最新购物车商品数量并写入session
-    public void session_myShopping_count(HttpServletRequest request, HttpServletResponse response){
+    public void session_myShopping_count(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        User user = (User)session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
         //获取该用户的所有购物车商品信息
         ArrayList<ShoppingCartItem> userShoppingCarts = shoppingCartService.getUserShoppingCart(user.getUser_id());
         int myShopping_count = 0;   //我的商品数量
         for (ShoppingCartItem userShoppingCart : userShoppingCarts) {
             myShopping_count += userShoppingCart.getGoods_count();  //添加到我的商品数量
         }
-        session.setAttribute("myShopping_count",myShopping_count);  //将我的商品数量写入服务器session中
+        session.setAttribute("myShopping_count", myShopping_count);  //将我的商品数量写入服务器session中
 
         //期望客户端关闭后，session也能相同
-        Cookie cookie = new Cookie("JSESSIONID",session.getId());
+        Cookie cookie = new Cookie("JSESSIONID", session.getId());
         cookie.setMaxAge(60 * 60);  //设置cookie存活时间为1个小时
         response.addCookie(cookie); //将cookie写入浏览器
     }
@@ -74,7 +74,7 @@ public class ShoppingCartService implements ShoppingCartInterface {
             if (goods_count <= 5) {//最新商品数量小于等于5
                 //修改表中内容
                 shoppingCartItem.setGoods_count(goods_count);
-                shoppingCartItemMapper.update_shoppingCart(shoppingCart.getCart_item_id(),goods_count);
+                shoppingCartItemMapper.update_shoppingCart(shoppingCart.getCart_item_id(), goods_count);
                 return "update";
             } else {//最新商品数量超过最大值5
                 return "exceed_max";
@@ -125,14 +125,39 @@ public class ShoppingCartService implements ShoppingCartInterface {
     }
 
     @Override
-    //重写根据购物项id，查询对应购物车商品信息
-    public String getItemShoppingCart(long cart_item_id, int goods_count) {
+    //声明根据购物项id，查询对应购物车商品信息
+    public ShoppingCartItem getItemShoppingCart(long cart_item_id) {
         //根据购物项id获取对应购物车商品信息
         ShoppingCartItem shoppingCartItem = shoppingCartItemMapper.select_itemId(cart_item_id);
-        if(shoppingCartItem == null){//查询为空，则此购物车商品信息不存在或已删除
+        if (shoppingCartItem == null) {//查询为空，则此购物车商品信息不存在或已删除
+            return null;//返回空
+        }
+        //获取集合不为空
+        //为购物车商品信息完善前端信息
+        GoodsInfo goodsInfo = goodsInfoService.getGoodsInfo(shoppingCartItem.getGoods_id());//根据商品id获取商品信息
+        String goods_name = goodsInfo.getGoods_name();//获取商品名
+        String goods_cover_img = goodsInfo.getGoods_cover_img();//获取商品主图
+        int original_price = goodsInfo.getOriginal_price();//获取商品价格（单价）
+        int goods_count = shoppingCartItem.getGoods_count();//获取商品数量
+        int total_price = original_price * goods_count;//计算总价
+
+        shoppingCartItem.setGoods_name(goods_name);//将商品名添加到购物车商品信息对象中
+        shoppingCartItem.setGoods_cover_img(goods_cover_img);//将商品主图添加到购物车商品信息对象中
+        shoppingCartItem.setOriginal_price(original_price);//将商品单价添加到购物车商品信息对象中
+        shoppingCartItem.setTotal_price(total_price);//将商品总价添加到购物车商品对象中
+
+        return shoppingCartItem;//返回查询到的购物车商品信息
+    }
+
+
+    @Override
+    //重写根据购物项id，查询并修改对应购物车商品信息
+    public String updateItemShoppingCart(long cart_item_id, int goods_count) {
+        ShoppingCartItem itemShoppingCart = this.getItemShoppingCart(cart_item_id);
+        if (itemShoppingCart == null) {//查询失败
             return "error";//返回修改失败信息
         }
-        //查询不为空，修改此购物车商品信息
+        //查询成功，修改此购物车商品信息
         shoppingCartItemMapper.update_shoppingCart(cart_item_id, goods_count);
         return "success";//返回修改成功信息
     }
