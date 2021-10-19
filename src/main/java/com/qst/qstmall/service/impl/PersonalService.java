@@ -7,6 +7,8 @@ import com.qst.qstmall.utils.Md5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /*
     用户个人服务  实现类
  */
@@ -89,4 +91,25 @@ public class PersonalService implements PersonalInterface {
         //修改的行数不为0，修改成功
         return "success";//返回成功信息
     }
+
+    @Override
+    //重写获取所有用户信息方法
+    public ArrayList<User> get_all_user(){
+        ArrayList<User> users = userMapper.select_all_user();//获取所有用户
+        return users;//返回用户集合
+    }
+
+    @Override
+    //声明修改用户锁定状态
+    public boolean update_locked_flag(User user){
+        int i = userMapper.update_locked_flag(user);//修改用户锁定状态
+        if(i == 0){//修改失败
+            return false;//返回假
+        }
+        //修改成功
+        return true;//返回真
+    }
+
+
+
 }

@@ -22,6 +22,9 @@ spring:
 #    cache: false
   view:
     suffix: "html"
+  servlet:
+    multipart:
+      max-file-size: 50MB
 
 
 # 分页配置
@@ -30,3 +33,5 @@ pagehelper:
   reasonable: true
   support-methods-arguments: !!str true
   params: count=countSql
+
+

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>后台管理系统 | Log in</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/admin/dist/img/favicon.png"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/admin/dist/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="/admin/dist/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/admin/dist/css/adminlte.min.css">
+    <style>
+        canvas {
+            display: block;
+            vertical-align: bottom;
+        }
+
+        #particles {
+            background-color: #F7FAFC;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="hold-transition login-page">
+<div id="particles">
+</div>
+<div class="login-box">
+    <div class="login-logo" style="color: #1baeae;">
+        <h1>后台管理系统登陆</h1>
+    </div>
+    <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body">
+            <p class="login-box-msg"> QST MALL , Let's Go !</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <!--                <div th:if="${not #strings.isEmpty(session.errorMsg)}" class="form-group">-->
+                    <div></div>
+                    <!--                    <div class="alert alert-danger" th:text="${session.errorMsg}"></div>-->
+                </div>
+                <div class="form-group has-feedback">
+                    <!--  <span class="fa fa-user form-control-feedback"></span>-->
+                    <input type="text" id="userName" name="login_user_name" class="form-control" placeholder="请输入账号"
+                           required="true" width="80%">
+                </div>
+                <div class="form-group has-feedback">
+                    <!-- <span class="fa fa-lock form-control-feedback"></span>-->
+                    <input type="password" id="password" name="login_password" class="form-control" placeholder="请输入密码"
+                           required="true">
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="text" class="form-control" name="verification_code" placeholder="请输入验证码" required="true">
+                    </div>
+                    <div class="col-6">
+                        <img alt="单击图片刷新！" class="pointer" src="/checkCode/createCheckCode"
+                             onclick="this.src='/checkCode/createCheckCode?'+new Date()*1">
+                    </div>
+                </div>
+                <div class="form-group has-feedback"></div>
+                <div class="row">
+                    <div class="col-4">
+                        <button id="login_button" type="button" class="btn btn-primary btn-block btn-flat"
+                                style="margin-left: 115px">登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="/admin/plugins/particles.js"></script>
+<script src="/admin/plugins/login-bg-particles.js"></script>
+
+<!-- jQuery -->
+<script src="/admin/plugins/jquery/jquery.min.js"></script>
+<script src="/mall/js/public.js"></script>
+<script src="/admin/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script >
+    //登录按钮点击事件
+    $("#login_button").click(function () {
+        //获取用户密码
+        var password = $("#password").val();
+        //判断密码是否合法
+        if (!validPassword(password)) {//棉麻不合法
+            swal('请输入正确的密码格式(6-20位字符和数字组合)', {
+                icon: "error",
+            });
+            return false;
+        }
+        //密码合法
+
+
+        //异步通信
+        //将表单提交到服务器进行登录业务
+        $.post("/admin/login", $("#loginForm").serialize(), function (data) {
+            if (data === "checkCode_expired") {//服务器返回的数据为checkCode_expired
+                //验证码已过期
+                swal('验证码已过期，请重新获取验证码', {
+                    icon: "error",
+                });
+                return false;
+            }
+            if (data === "checkCode_error") {//服务器返回的数据为checkCode_error
+                //验证码错误
+                swal('验证码错误，请重新获取验证码', {
+                    icon: "error",
+                });
+                return false;
+            }
+            if (data === "login_success") {//服务器返回的数据为login_success
+                //登录成功，跳转到商城主页
+                swal({
+                    title: "登录成功",
+                    text: "是否跳转至管理员主页?",
+                    icon: "success",
+                    buttons: true,
+                }).then((flag) => {
+                    if (flag) {
+                        window.location.href = '/admin/index.html';
+                    }
+                });
+
+            }
+            if (data === "login_error") {//服务器返回的数据为login_error
+                //登录失败，账号不存在
+                swal('登录失败，您输入的账号或密码错误', {
+                    icon: "error",
+                });
+                return false;
+            }
+        })
+    })
+</script>
+
+
+</html>

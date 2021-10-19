@@ -24,12 +24,31 @@ public interface CategoryLevelInterface {
     ArrayList<GoodsCategoryLevelFirst> levelAll();
 
     //声明通过1级商品的分类id获取2级商品分类集合
-    public ArrayList<GoodsCategoryLevelSecond> getLevelSeconds_First(long category_id);
+    ArrayList<GoodsCategoryLevelSecond> getLevelSeconds_First(long category_id);
 
     //声明通过2级商品分类id获取3级商品分类集合
-    public ArrayList<GoodsCategoryLevelThird> getLevelThirds_Second(long category_id);
+    ArrayList<GoodsCategoryLevelThird> getLevelThirds_Second(long category_id);
 
     //声明通过商品分类id获取所有3级分类
     ArrayList<GoodsCategoryLevelThird> levelThirdAll(long category_id);
+
+    //声明添加商品分类信息方法
+    void addGoodsCategory(GoodsCategoryLevelThird goodsCategoryLevelThird);
+
+    //声明修改商品分类信息方法
+    boolean updateGoodsCategory(GoodsCategoryLevelThird goodsCategoryLevelThird);
+
+    //声明删除商品分类信息方法
+    boolean deleteGoodsCategory(long category_id,int update_user);
+
+    //声明根据3级商品的分类id获取商品分类信息
+    GoodsCategoryLevelThird get_category_third(long category_id);
+
+    //声明根据3级商品的分类id获取2级分类信息
+    GoodsCategoryLevelSecond get_category_second(long category_id);
+
+    //声明根据2级商品分类id获取1级商品分类信息
+    GoodsCategoryLevelFirst get_category_first(long category_id);
+
 
 }

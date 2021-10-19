@@ -17,7 +17,7 @@ import java.util.Random;
 @RequestMapping("/checkCode")
 public class CheckCodeController {
     //生成验证码
-    @RequestMapping("/creatCheckCode")
+    @RequestMapping("/createCheckCode")
     public void creatCheckCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int width = 98;
         int height = 42;

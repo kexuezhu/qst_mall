@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment">
+</header>
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+
+    a {
+        color: #1baeae;
+        text-decoration: none;
+        background-color: transparent;
+        -webkit-text-decoration-skip: objects;
+    }
+
+    a:hover {
+        color: white;
+        background-color: #1baeae;
+    }
+</style>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains 图标content -->
+    <div class="content-wrapper">
+        <!-- Content Header (图标header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">订单管理</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <div class="grid-btn">
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                            <th style="text-align: center;vertical-align: middle">订单ID</th>
+                            <th style="text-align: center;vertical-align: middle">订单号</th>
+                            <th style="text-align: center;vertical-align: middle">订单总价</th>
+                            <th style="text-align: center;vertical-align: middle">订单状态</th>
+                            <th style="text-align: center;vertical-align: middle">支付方式</th>
+                            <th style="text-align: center;vertical-align: middle">创建时间</th>
+                            <th style="text-align: center;vertical-align: middle">可执行操作</th>
+                            </thead>
+                            <th:block th:unless="${#lists.isEmpty(orders)}">
+                                <th:block th:each="order : ${orders}">
+                                    <tr>
+                                        <td th:text="${order.order_id}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td th:id="'o_no'+${order.order_id}"
+                                            th:text="${order.order_no}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td th:id="'t_price'+${order.order_id}"
+                                            th:text="${order.total_price}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <th:block th:if="${order.order_status}!=null">
+                                            <th:block th:if="${order.order_status}==0">
+                                                <td th:id="'o_status'+${order.order_id}"
+                                                    th:text="待支付"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status}==1">
+                                                <td th:id="'o_status'+${order.order_id}"
+                                                    th:text="已支付"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status}==2">
+                                                <td th:id="'o_status'+${order.order_id}"
+                                                    th:text="配货完成"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status}==3">
+                                                <td th:id="'o_status'+${order.order_id}"
+                                                    th:text="出库成功"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status}==4">
+                                                <td th:id="'o_status'+${order.order_id}"
+                                                    th:text="交易成功"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status}==-1">
+                                                <td th:id="'o_status'+${order.order_id}"
+                                                    th:text="手动关闭"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status}==-2">
+                                                <td th:id="'o_status'+${order.order_id}"
+                                                    th:text="超时关闭"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status}==-3">
+                                                <td th:id="'o_status'+${order.order_id}"
+                                                    th:text="商家关闭"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                        </th:block>
+                                        <th:block th:if="${order.pay_type}!=null">
+                                            <th:block th:if="${order.pay_type}==0">
+                                                <td th:id="'p_type'+${order.order_id}"
+                                                    th:text="无"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.pay_type}==1">
+                                                <td th:id="'p_type'+${order.order_id}"
+                                                    th:text="支付宝支付"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                            <th:block th:if="${order.pay_type}==2">
+                                                <td th:id="'p_type'+${order.order_id}"
+                                                    th:text="微信支付"
+                                                    style="text-align: center;vertical-align: middle"></td>
+                                            </th:block>
+                                        </th:block>
+                                        <td th:text="${order.create_time}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td type="hidden" th:id="'u_address'+${order.order_id}"
+                                            th:text="${order.user_address}"
+                                            style="display: none; text-align: center; vertical-align: middle"></td>
+                                        <td style="vertical-align: middle">
+                                            <th:block th:if="${order.order_status >= 0 && order.order_status!=4}">
+                                                <button class="btn btn-info"
+                                                        th:onclick="'orderEdit('+${order.order_id}+')'"><i
+                                                        class="fa fa-pencil-square-o"></i>&nbsp;修改订单
+                                                </button>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status == 1}">
+                                                <button class="btn btn-info"
+                                                        th:onclick="'orderCheckDone('+${order.order_id}+')'"><i
+                                                        class="fa fa-truck"></i>&nbsp;配货完成
+                                                </button>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status == 2}">
+                                                <button class="btn btn-info"
+                                                        th:onclick="'orderCheckOut('+${order.order_id}+')'"><i
+                                                        class="fa fa-truck"></i>&nbsp;出库
+                                                </button>
+                                            </th:block>
+                                            <th:block th:if="${order.order_status >= 0 && order.order_status!=4}">
+                                                <button class="btn btn-danger"
+                                                        th:onclick="'closeOrder('+${order.order_id}+')'"><i
+                                                        class="fa fa-trash-o"></i>&nbsp;关闭订单
+                                                </button>
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </th:block>
+                        </table>
+                        <div id="jqGridPager"></div>
+                    </div><!-- /.card-body -->
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <div class="content">
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="orderInfoModal" tabindex="-1" role="dialog"
+                 aria-labelledby="orderInfoModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h6 class="modal-title" id="orderInfoModalLabel">Modal</h6>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <div class="alert alert-danger" id="edit-error-msg" style="display: none;">
+                                        错误信息展示栏。
+                                    </div>
+                                </div>
+                                <input type="hidden" id="orderId">
+                                <div class="form-group">
+                                    <label for="totalPrice" class="control-label">订单价格:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="number" class="form-control" id="totalPrice" name="totalPrice"
+                                           placeholder="请输入改价金额" required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="userAddress"
+                                           class="control-label">收件人信息:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="text" class="form-control" id="userAddress" name="userAddress"
+                                           placeholder="请输入收件人地址" value="##">
+                                </div>
+
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="saveButton">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal -->
+        </div>
+        <div class="content">
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="expressInfoModal" tabindex="-1" role="dialog"
+                 aria-labelledby="expressInfoModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h6 class="modal-title" id="expressInfoModalLabel">Modal</h6>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label class="control-label">收件信息:</label>
+                                    <label id="userAddressInfo" class="control-label"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal -->
+        </div>
+        <div class="content">
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="orderItemModal" tabindex="-1" role="dialog"
+                 aria-labelledby="orderItemModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h6 class="modal-title" id="orderItemModalLabel">Modal</h6>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label id="orderItemString" class="control-label"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/grid.locale-cn.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/grid.locale-cn.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+<script th:src="@{/admin/dist/js/qst_mall_order.js}"></script>
+</body>
+
+<script>
+    //修改订单按钮事件
+    function orderEdit(order_id) {
+        var t_price = 't_price' + order_id;
+        var u_address = 'u_address' + order_id;
+
+        var total_price = document.getElementById(t_price).innerHTML;
+        var user_address = document.getElementById(u_address).innerHTML;
+
+        $('#orderId').val(order_id);
+        $('#totalPrice').val(total_price);
+        $('#userAddress').val(user_address);
+        $('#expressInfoModalLabel').val('修改订单');
+
+        $('#orderInfoModal').modal('show');
+    }
+
+    //确认修改订单按钮事件
+    $('#saveButton').click(function () {
+        var order_id = $('#orderId').val();
+        var total_price = $('#totalPrice').val();
+        var user_address = $('#userAddress').val();
+
+        swal({
+            title: "请注意",
+            text: "确认要修改订单吗?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((flag) => {
+            if (flag) {
+                $.ajax({
+                    url: "/admin/orders/update",
+                    type: "POST",
+                    data: {
+                        "order_id": order_id,
+                        "total_price": total_price,
+                        "user_address": user_address
+                    },
+                    success: function (data) {
+                        if (data == "success") {
+                            swal("修改成功", {
+                                icon: "success",
+                            }).then((flag) => {
+                                if (flag) {
+                                    window.location.reload();
+                                }
+                            })
+
+                        }
+                        if (data == "error") {
+                            swal("修改失败", {
+                                icon: "error",
+                            });
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", {
+                            icon: "error",
+                        });
+                    }
+                })
+            }
+        })
+    });
+
+    //配货完成按钮事件
+    function orderCheckDone(order_id) {
+        swal({
+            title: "请注意",
+            text: "确认已完成配货吗?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((flag) => {
+            if (flag) {
+                $.ajax({
+                    url: "/admin/orders/update_order_status",
+                    type: "POST",
+                    data: {
+                        "order_id": order_id,
+                        "order_status": 2
+                    },
+                    success: function (data) {
+                        if (data == "success") {
+                            swal("配货完成", {
+                                icon: "success",
+                            }).then((flag) => {
+                                if (flag) {
+                                    window.location.reload();
+                                }
+                            })
+
+                        }
+                        if (data == "error") {
+                            swal("修改配货失败", {
+                                icon: "error",
+                            });
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", {
+                            icon: "error",
+                        });
+                    }
+                })
+            }
+        })
+    }
+
+    //出库按钮事件
+    function orderCheckOut(order_id) {
+        swal({
+            title: "请注意",
+            text: "确认已完成出库吗?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((flag) => {
+            if (flag) {
+                $.ajax({
+                    url: "/admin/orders/update_order_status",
+                    type: "POST",
+                    data: {
+                        "order_id": order_id,
+                        "order_status": 3
+                    },
+                    success: function (data) {
+                        if (data == "success") {
+                            swal("出库完成", {
+                                icon: "success",
+                            }).then((flag) => {
+                                if (flag) {
+                                    window.location.reload();
+                                }
+                            })
+
+                        }
+                        if (data == "error") {
+                            swal("出库失败", {
+                                icon: "error",
+                            });
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", {
+                            icon: "error",
+                        });
+                    }
+                })
+            }
+        })
+    }
+
+    //关闭订单按钮事件
+    function closeOrder(order_id) {
+        swal({
+            title: "请注意",
+            text: "确认关闭订单吗?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((flag) => {
+            if (flag) {
+                $.ajax({
+                    url: "/admin/orders/update_order_status",
+                    type: "POST",
+                    data: {
+                        "order_id": order_id,
+                        "order_status": -3
+                    },
+                    success: function (data) {
+                        if (data == "success") {
+                            swal("订单已关闭", {
+                                icon: "success",
+                            }).then((flag) => {
+                                if (flag) {
+                                    window.location.reload();
+                                }
+                            })
+
+                        }
+                        if (data == "error") {
+                            swal("订单关闭失败", {
+                                icon: "error",
+                            });
+                        }
+                    },
+                    error: function () {
+                        swal("操作失败", {
+                            icon: "error",
+                        });
+                    }
+                })
+            }
+        })
+    }
+
+
+</script>
+
+
+</html>

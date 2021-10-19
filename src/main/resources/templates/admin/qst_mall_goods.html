@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--后台商品管理-->
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment">
+</header>
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+
+    a {
+        color: #1baeae;
+        text-decoration: none;
+        background-color: transparent;
+        -webkit-text-decoration-skip: objects;
+    }
+
+    a:hover {
+        color: white;
+        background-color: #1baeae;
+    }
+</style>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains 图标content -->
+    <div class="content-wrapper">
+        <!-- Content Header (图标header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">商品管理</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <div class="grid-btn">
+                            <button class="btn btn-info" onclick="addGoods()"><i
+                                    class="fa fa-plus"></i>&nbsp;添加商品
+                            </button>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                            <th style="text-align: center;vertical-align: middle">商品编号</th>
+                            <th style="text-align: center;vertical-align: middle">商品名</th>
+                            <th style="text-align: center;vertical-align: middle">商品简介</th>
+                            <th style="text-align: center;vertical-align: middle">商品图片</th>
+                            <th style="text-align: center;vertical-align: middle">商品库存</th>
+                            <th style="text-align: center;vertical-align: middle">商品售价</th>
+                            <th style="text-align: center;vertical-align: middle">上架状态</th>
+                            <th style="text-align: center;vertical-align: middle">创建时间</th>
+                            </thead>
+                            <th:block th:unless="${#lists.isEmpty(goodsInfos)}">
+                                <th:block th:each="goodsInfo : ${goodsInfos}">
+                                    <tr>
+                                        <td th:text="${goodsInfo.goods_id}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td th:id="'g_name'+${goodsInfo.goods_id}"
+                                            th:text="${goodsInfo.goods_name}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td th:id="'g_intro'+${goodsInfo.goods_id}"
+                                            th:text="${goodsInfo.goods_intro}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td th:id="'g_cover_img'+${goodsInfo.goods_id}" style="text-align: center;vertical-align: middle">
+                                            <img th:src="${goodsInfo.goods_cover_img}" style="width: 100px;height: 100px">
+                                        </td>
+                                        <td th:id="'s_num'+${goodsInfo.goods_id}"
+                                            th:text="${goodsInfo.stock_num}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td th:id="'o_price'+${goodsInfo.goods_id}"
+                                            th:text="${goodsInfo.original_price}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td th:id="'g_sell_status'+${goodsInfo.goods_id}"
+                                            th:text="${goodsInfo.goods_sell_status}==0?'已上架':'已下架'"
+                                            style="text-align: center;vertical-align: middle"}>
+                                        </td>
+                                        <td th:text="${goodsInfo.create_time}"
+                                            style="text-align: center;vertical-align: middle"></td>
+                                        <td style="text-align: center;vertical-align: middle">
+                                            <button class="btn btn-info"
+                                                    th:onclick="'update_goods('+${goodsInfo.goods_id}+')'">
+                                                <i class="fa fa-pencil-square-o"></i>&nbsp;修改商品
+                                            </button>
+                                            <th:block th:if="${goodsInfo.goods_sell_status}==1">
+                                                <button class="btn btn-success"
+                                                        th:onclick="'putUp_goods('+${goodsInfo.goods_id}+')'">
+                                                    <i class="fa fa-arrow-up"></i>&nbsp;上架商品
+                                                </button>
+                                            </th:block>
+                                            <th:block th:if="${goodsInfo.goods_sell_status}==0">
+                                                <button class="btn btn-danger"
+                                                        th:onclick="'putDown_goods('+${goodsInfo.goods_id}+')'">
+                                                    <i class="fa fa-arrow-down"></i>&nbsp;下架商品
+                                                </button>
+                                            </th:block>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </th:block>
+                        </table>
+                        <div id="jqGridPager"></div>
+                    </div><!-- /.card-body -->
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+
+</body>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/grid.locale-cn.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/grid.locale-cn.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+<script th:src="@{/admin/dist/js/qst_mall_goods.js}"></script>
+
+<script>
+    //修改商品按钮事件
+    function update_goods(goods_id) {
+        var g_sell_status = 'g_sell_status'+goods_id;
+        var goods_sell_status = document.getElementById(g_sell_status).innerText;
+        if (goods_sell_status == "已下架"){//商品已下架，无法修改信息
+            swal('商品已下架,请上架商品后再进行修改',{
+                icon: "error"
+            });
+            return false;
+        }
+       window.location.href="/admin/goods/edit/" + goods_id;
+    }
+
+    //上架商品按钮事件
+    function putUp_goods(goods_id) {
+        $.get("/admin/goods/putUp", {"goods_id": goods_id}, function (data) {
+            if (data === "putUp_success") {//服务器返回的数据为putUp_success
+                //上架成功
+                swal('商品上架成功', {
+                    icon: "success",
+                }).then((flag) => {
+                    if (flag) {
+                        location.reload();
+                    }
+                });
+                return false;
+            }
+            if (data === "putUp_error") {//服务器返回的数据为putUp_error
+                //上架失败
+                swal('商品上架失败', {
+                    icon: "error",
+                });
+                return false;
+            }
+
+        })
+    }
+
+    //下架商品按钮事件
+    function putDown_goods(goods_id) {
+        $.get("/admin/goods/putDown", {"goods_id": goods_id}, function (data) {
+            if (data === "putDown_success") {//服务器返回的数据为putDown_success
+                //下架成功
+                swal('商品下架成功', {
+                    icon: "success",
+                }).then((flag) => {
+                    if (flag) {
+                        location.reload();
+                    }
+                })
+                ;
+                return false;
+            }
+            if (data === "putDown_error") {//服务器返回的数据为putDown_error
+                //下架失败
+                swal('商品下架失败', {
+                    icon: "error",
+                });
+                return false;
+            }
+
+        })
+    }
+
+
+
+
+</script>
+
+
+</html>

@@ -7,7 +7,7 @@ import java.util.Date;
  */
 public class IndexConfig {
     //首页配置项主键id
-    private  long config_id;
+    private long config_id;
     //显示字符(配置搜索时不可为空，其他可为空)
     private String config_name;
     //1-搜索框热搜 2-搜索下拉框热搜 3-(首页)热销商品 4-(首页)新品上线 5-(首页)为你推荐'
@@ -21,13 +21,30 @@ public class IndexConfig {
     //删除标识字段(0-未删除 1-已删除)'
     private boolean is_deleted;
     //创建时间
-    private Date create_time;
+    private String create_time;
     //创建者id
     private int create_user;
     //最新修改时间
-    private Date update_time;
+    private String update_time;
     //修改者id
     private int update_user;
+
+    @Override
+    public String toString() {
+        return "IndexConfig{" +
+                "config_id=" + config_id +
+                ", config_name='" + config_name + '\'' +
+                ", config_type=" + config_type +
+                ", goods_id=" + goods_id +
+                ", redirect_url='" + redirect_url + '\'' +
+                ", config_rank=" + config_rank +
+                ", is_deleted=" + is_deleted +
+                ", create_time='" + create_time + '\'' +
+                ", create_user=" + create_user +
+                ", update_time='" + update_time + '\'' +
+                ", update_user=" + update_user +
+                '}';
+    }
 
     public long getConfig_id() {
         return config_id;
@@ -85,11 +102,11 @@ public class IndexConfig {
         this.is_deleted = is_deleted;
     }
 
-    public Date getCreate_time() {
+    public String getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(String create_time) {
         this.create_time = create_time;
     }
 
@@ -101,11 +118,11 @@ public class IndexConfig {
         this.create_user = create_user;
     }
 
-    public Date getUpdate_time() {
+    public String getUpdate_time() {
         return update_time;
     }
 
-    public void setUpdate_time(Date update_time) {
+    public void setUpdate_time(String update_time) {
         this.update_time = update_time;
     }
 

@@ -9,10 +9,7 @@ import com.qst.qstmall.service.impl.PersonalService;
 import com.qst.qstmall.service.impl.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -25,19 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@RestController
+@Controller
 @RequestMapping("/user")
 public class PersonController {
-
     @Autowired
-    public PersonalService personalService;
+    private PersonalService personalService;
     @Autowired
     private ShoppingCartService shoppingCartService;
     @Autowired
     private OrderService orderService;
-
-    int pageNum = 1;
-    int pageSize = 3;
 
 
     //跳转到登录界面
@@ -121,6 +114,7 @@ public class PersonController {
     public void login(User user, HttpServletRequest request, HttpServletResponse response) throws IOException {
         //判断验证码是否正确
         String verification_code = request.getParameter("verification_code");//获取用户输入的验证码
+
         HttpSession session = request.getSession();//获取服务器中的session
         //判断session中是否有验证码
         if (session.getAttribute("checkCode") == null) {
@@ -176,7 +170,7 @@ public class PersonController {
 
     //退出登录
     @RequestMapping("/logout")
-    public ModelAndView logout(HttpServletRequest request, HttpServletResponse response){
+    public ModelAndView logout(HttpServletRequest request){
         //获取服务器中的session
         HttpSession session = request.getSession();
         //移除user对象
@@ -187,6 +181,7 @@ public class PersonController {
 
     //修改个人信息
     @GetMapping("/updateInfo")
+    @ResponseBody
     public String updateInfo(User user,HttpServletRequest request, HttpServletResponse response){
         String s = personalService.updateUserInfo(user);
         if(s == "success") {//修改成功
@@ -207,6 +202,7 @@ public class PersonController {
 
     //修改收货地址
     @GetMapping("/updateAddress")
+    @ResponseBody
     public String updateAddress(User user,HttpServletRequest request, HttpServletResponse response){
         User userInfo1 = personalService.getUserInfo(user.getUser_id());
         userInfo1.setAddress(user.getAddress());
@@ -235,8 +231,9 @@ public class PersonController {
         //获取当前用户id
         User user = (User)session.getAttribute("user");
         long user_id = user.getUser_id();
-        //获取当前用户的订单总数
-        int myOrders_count = orderService.get_order_count(user_id);
+
+        int pageNum = 1;
+        int pageSize = 3;
 
         if(request.getParameter("pageNum") != null){
             pageNum = Integer.parseInt(request.getParameter("pageNum"));
@@ -244,10 +241,14 @@ public class PersonController {
         if(request.getParameter("pageSize") != null){
             pageSize = Integer.parseInt(request.getParameter("pageSize"));
         }
+
+
         //获取当前用户的当前页订单信息
-        ArrayList<Order> orders = orderService.get_order(pageNum, pageSize, user_id);
+        ArrayList<Order> orders = orderService.get_order_page(pageNum, pageSize, user_id);
         PageInfo<Order> pageInfos = new PageInfo<>(orders);
         List<Order> list = pageInfos.getList();
+        //获取当前用户的订单总数
+        long myOrders_count= pageInfos.getTotal();
 
         ModelAndView modelAndView = new ModelAndView("mall/my-orders");
         modelAndView.addObject("path","orders");//添加path键，声明当前为订单页
@@ -256,30 +257,5 @@ public class PersonController {
         return modelAndView;
     }
 
-    //我的订单页面分页请求
-    @GetMapping("/my-orders-page")
-    public void myOrdersPage(HttpServletRequest request){
-        if(request.getParameter("pageNum") != null){
-            pageNum = Integer.parseInt(request.getParameter("pageNum"));
-        }
-        if(request.getParameter("pageSize") != null){
-            pageSize = Integer.parseInt(request.getParameter("pageSize"));
-        }
-
-        //获取服务器中的session
-        HttpSession session = request.getSession();
-        //获取当前用户id
-        User user = (User)session.getAttribute("user");
-        long user_id = user.getUser_id();
-
-        //获取当前用户的当前页订单集合信息
-        ArrayList<Order> orders = orderService.get_order(pageNum, pageSize, user_id);
-
-        //将分页订单集合封装成PageInfo集合
-        PageInfo<Order> pageInfos = new PageInfo<>(orders);
-        List<Order> list = pageInfos.getList();
-
-        request.setAttribute("orders",list);//添加订单分页信息
-    }
 
 }

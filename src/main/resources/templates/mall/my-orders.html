@@ -28,19 +28,25 @@
                         <div id="J_orderList">
                             <ul class="order-list">
                                 <th:block th:unless="${#lists.isEmpty(orders)}">
+                                    <input type="hidden" value="">
                                     <!-- todo 无订单时 换背景图为无订单 -->
-                                    <th:block th:each="order : ${orders}">
+                                    <th:block th:id="page_info" th:each="order : ${orders}">
                                         <li class="uc-order-item uc-order-item-list">
                                             <div class="order-detail">
                                                 <div class="order-summary">
                                                     <th:block th:if="${order.order_status<0}">
-                                                        <div class="order-status-closed" text="订单已关闭"></div>
+                                                        <div class="order-status-closed" th:text="订单已关闭"></div>
                                                     </th:block>
                                                     <th:block th:if="${order.order_status==0}">
-                                                        <div class="order-status-need-pay" text="订单待支付"></div>
+                                                        <div class="order-status-need-pay" th:text="订单待支付"></div>
                                                     </th:block>
                                                     <th:block th:if="${order.order_status>0}">
-                                                        <div class="order-status-success" text="订单已支付"></div>
+                                                        <th:block th:if="${order.order_status<4}">
+                                                            <div class="order-status-success" th:text="订单已支付"></div>
+                                                        </th:block>
+                                                        <th:block th:if="${order.order_status==4}">
+                                                            <div class="order-status-success" th:text="订单已完成"></div>
+                                                        </th:block>
                                                     </th:block>
                                                 </div>
                                                 <table class="order-detail-table">
@@ -49,10 +55,18 @@
                                                         <th class="col-main">
                                                             <p class="caption-info">
                                                                 <span class="sep"
-                                                                      th:text="${'下单时间：'+#dates.format(order.create_time, 'yyyy-MM-dd HH:mm:ss')}">|下单时间： 2019-11-29 15:33:20</span>
+                                                                      th:text="${'下单时间：'+order.create_time}">|下单时间： 2019-11-29 15:33:20</span>
+                                                                <!--                                                                      th:text="${'下单时间：'+#dates.format(order.create_time, 'yyyy-MM-dd HH:mm:ss')}">|下单时间： 2019-11-29 15:33:20</span>-->
                                                                 <span class="sep" th:text="${'订单号：'+order.order_no}">201908121807</span>
-                                                                <span class="sep"
-                                                                      th:text="${'支付方式：'+order.pay_type}"></span>
+                                                                <th:block th:if="${order.pay_type==0}">
+                                                                    <span class="sep">支付方式：无</span>
+                                                                </th:block>
+                                                                <th:block th:if="${order.pay_type==1}">
+                                                                    <span class="sep">支付方式：支付宝支付</span>
+                                                                </th:block>
+                                                                <th:block th:if="${order.pay_type==0}">
+                                                                    <span class="sep">支付方式：微信支付</span>
+                                                                </th:block>
                                                             </p>
                                                         </th>
                                                         <th class="col-sub">
@@ -70,14 +84,14 @@
                                                                     <li>
                                                                         <div class="figure figure-thumb">
                                                                             <a target="_blank"
-                                                                               th:href="@{'/goods/detail/'+${item.goods_id}}">
+                                                                               th:href="@{'/goods/detail?goods_id='+${item.goods_id}}">
                                                                                 <!--                                                                        <a target="_blank" th:href="@{'/goods/detail/'+${item.goodsId}}">-->
                                                                                 <img th:src="@{${item.goods_cover_img}}"
                                                                                      width="80" height="80" alt="">
                                                                             </a>
                                                                         </div>
                                                                         <p class="name"><a target="_blank"
-                                                                                           th:href="@{'/goods/detail/'+${item.goods_id}}"
+                                                                                           th:href="@{'/goods/detail?goods_id='+${item.goods_id}}"
                                                                                            th:text="${item.goods_name}">wxd</a>
                                                                         </p>
                                                                         <p class="price"
@@ -88,7 +102,7 @@
                                                             </ul>
                                                         </td>
                                                         <td class="order-actions"><a class="btn btn-small btn-line-gray"
-                                                                                     th:href="@{${'/orders/'+order.order_no}}">订单详情</a>
+                                                                                     th:href="@{${'/order-detail.html?order_no='+order.order_no}}">订单详情</a>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -135,10 +149,7 @@
                 //首次不执行
                 if (!first) {
                     //do something
-                    $.get("/user/my-orders-page", {pageNum: obj.curr, pageSize: obj.limit}, function (data) {
-                        location.reload();
-                        // $('#recommend').replaceAll();
-                    })
+                    location.href = "/user/my-orders.html?pageNum=" + obj.curr + "&pageSize=" + obj.limit + "#!fenye=" + obj.curr;
                 }
             }
         });

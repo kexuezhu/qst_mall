@@ -23,4 +23,33 @@ public class IndexConfigService implements IndexConfigInterface {
         ArrayList<IndexConfig> indexConfigs = indexConfigMapper.select_indexConfig(config_type);
         return indexConfigs;
     }
+
+    @Override
+    //重写添加首页配置信息方法
+    public void addIndexConfig(IndexConfig indexConfig){
+        indexConfigMapper.insert_indexConfig(indexConfig);
+    }
+
+    @Override
+    //声明修改首页配置信息方法
+    public boolean updateIndexConfig(IndexConfig indexConfig){
+        int i = indexConfigMapper.update_indexConfig(indexConfig);
+        if(i == 0){//修改失败
+            return false;//返回假
+        }
+        //修改成功
+        return true;//返回真
+    }
+
+    @Override
+    //声明删除首页配置信息方法
+    public boolean deleteIndexConfig(long config_id,int update_user){
+        int i = indexConfigMapper.update_indexConfig_is_deleted(config_id,update_user);
+        if(i == 0){//修改失败
+            return false;//返回假
+        }
+        //修改成功
+        return true;//返回真
+    }
+
 }

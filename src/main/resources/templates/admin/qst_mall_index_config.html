@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment">
+</header>
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+</style>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains 图标content -->
+    <div class="content-wrapper">
+        <!-- Content Header (图标header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">首页配置管理</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <div class="grid-btn">
+                            <button class="btn btn-info" onclick="add_config()"><i
+                                    class="fa fa-plus"></i>&nbsp;新增
+                            </button>
+                        </div>
+                        <br>
+                        <table class="table table-bordered">
+                            <thead>
+                            <th>配置项ID</th>
+                            <th>配置项名称</th>
+                            <th>跳转链接</th>
+                            <th>排序值</th>
+                            <th>商品编号</th>
+                            <th>添加时间</th>
+                            </thead>
+                            <th:block th:unless="${#lists.isEmpty(indexConfigs)}">
+                                <th:block th:each="indexConfig : ${indexConfigs}">
+                                    <tr>
+                                        <td th:text="${indexConfig.config_id}"></td>
+                                        <td th:id="'c_name'+${indexConfig.config_id}"
+                                            th:text="${indexConfig.config_name}"></td>
+                                        <td th:id="'r_url'+${indexConfig.config_id}"
+                                            th:text="${indexConfig.redirect_url}"></td>
+                                        <td th:id="'c_rank'+${indexConfig.config_id}"
+                                            th:text="${indexConfig.config_rank}"></td>
+                                        <td th:id="'g_id'+${indexConfig.config_id}"
+                                            th:text="${indexConfig.goods_id}"></td>
+                                        <td th:text="${indexConfig.create_time}"></td>
+                                        <td style="text-align: center">
+                                            <button class="btn btn-info"
+                                                    th:onclick="'update_config('+${indexConfig.config_id}+')'">
+                                                <i class="fa fa-pencil-square-o"></i>&nbsp;修改
+                                            </button>
+                                            <button class="btn btn-danger"
+                                                    th:onclick="'delete_config('+${indexConfig.config_id}+')'">
+                                                <i class="fa fa-trash-o"></i>&nbsp;删除
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </th:block>
+                        </table>
+                        <div id="jqGridPager"></div>
+                    </div><!-- /.card-body -->
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+        <div class="content">
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="indexConfigModal" tabindex="-1" role="dialog"
+                 aria-labelledby="indexConfigModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h6 class="modal-title" id="categoryModalLabel">Modal</h6>
+                        </div>
+                        <div class="modal-body">
+                            <form id="indexConfigForm">
+                                <div class="form-group">
+                                    <div class="alert alert-danger" id="edit-error-msg" style="display: none;">
+                                        错误信息展示栏。
+                                    </div>
+                                </div>
+                                <input type="hidden" class="form-control" id="indexConfigModaconfigId"
+                                       name="indexConfigModaconfigId">
+                                <input type="hidden" id="config_type" name="config_type" th:value="${config_type}">
+                                <input type="hidden" id="config_id" name="config_id">
+                                <div class="form-group">
+                                    <label for="configName" class="control-label">配置项显示字符:</label>
+                                    <input type="text" class="form-control" id="configName" name="config_name"
+                                           placeholder="请输入配置项显示字符" required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="redirectUrl" class="control-label">跳转链接:</label>
+                                    <input type="text" class="form-control" id="redirectUrl" name="redirect_url"
+                                           placeholder="请输入跳转链接" value="##">
+                                </div>
+                                <div class="form-group">
+                                    <label for="goodsId" class="control-label">关联商品编号:</label>
+                                    <input type="number" class="form-control" id="goodsId" name="goods_id"
+                                           placeholder="关联商品编号" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="configRank" class="control-label">排序值:</label>
+                                    <input type="number" class="form-control" id="configRank" name="config_rank"
+                                           placeholder="请输入排序值" value="0">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" onclick="confirm_update_config()">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+</body>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/grid.locale-cn.js}"></script>
+
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+<script th:src="@{/admin/dist/js/qst_mall_index_config.js}"></script>
+
+<script>
+    //模态框关闭后重置数据
+    $('#indexConfigModal').on('hidden.bs.modal', function () {
+        location.reload();
+    });
+
+    //新增首页配置按钮事件
+    function add_config() {
+        $('.modal-title').html('首页配置项添加');
+        $('#indexConfigModal').modal('show');
+    }
+
+    //修改首页配置按钮事件
+    function update_config(config_id) {
+        var c_name = "c_name" + config_id;
+        var config_name = document.getElementById(c_name).innerHTML;
+        var r_url = "r_url" + config_id;
+        var redirect_url = document.getElementById(r_url).innerHTML;
+        var g_id = "g_id" + config_id;
+        var goods_id = document.getElementById(g_id).innerHTML;
+        var c_rank = "c_rank" + config_id;
+        var config_rank = document.getElementById(c_rank).innerHTML;
+        $('.modal-title').html('修改首页配置项');
+        $('#config_id').val(config_id);
+        $('#configName').val(config_name);
+        $('#redirectUrl').val(redirect_url);
+        $('#goodsId').val(goods_id);
+        $('#configRank').val(config_rank);
+
+        $('#indexConfigModal').modal('show');
+    }
+
+    //确认修改首页配置按钮事件
+    function confirm_update_config() {
+        var config_type = $('#config_type').val();
+        var config_id = $('#config_id').val();
+        var config_name = $('#configName').val();
+        var redirect_url = $('#redirectUrl').val();
+        var goods_id = $('#goodsId').val();
+        var config_rank = $('#configRank').val();
+
+        //config_id内容为空，请求增加首页配置
+        if(config_id == ''){
+            $.ajax({
+                type: "POST",
+                url: "/admin/indexConfig/add",
+                data: {
+                    "config_type": config_type,
+                    "config_name": config_name,
+                    "redirect_url": redirect_url,
+                    "goods_id": goods_id,
+                    "config_rank": config_rank,
+                },
+                success: function (data) {
+                    if (data === "add_success") {//服务器返回的数据为add_success
+                        //添加成功
+                        swal('添加成功', {
+                            icon: "success",
+                        }).then((flag) => {
+                            if (flag) {
+                                location.reload();
+                            }
+                        });
+                        return false;
+                    }
+
+                }
+            });
+
+            return;
+        }
+
+        //config_id内容不为空，请求修改首页配置
+        $.ajax({
+            type: "POST",
+            url: "/admin/indexConfig/update",
+            data: {
+                "config_id": config_id,
+                "config_type": config_type,
+                "config_name": config_name,
+                "redirect_url": redirect_url,
+                "goods_id": goods_id,
+                "config_rank": config_rank,
+            },
+            success: function (data) {
+                if (data === "update_success") {//服务器返回的数据为update_success
+                    //修改成功
+                    swal('修改成功', {
+                        icon: "success",
+                    }).then((flag) => {
+                        if (flag) {
+                            location.reload();
+                        }
+                    });
+                    return false;
+                }
+                if (data === "update_error") {//服务器返回的数据为update_error
+                    //修改失败
+                    swal('修改失败', {
+                        icon: "error",
+                    });
+                    return false;
+                }
+
+            }
+        });
+
+    }
+
+    //删除首页配置按钮事件
+    function delete_config(config_id) {
+        $.get("/admin/indexConfig/delete", {"carousel_id": config_id}, function (data) {
+            if (data === "success") {//服务器返回的数据为success
+                //删除成功
+                swal('删除成功', {
+                    icon: "success",
+                }).then((flag) => {
+                    if (flag) {
+                        location.reload();
+                    }
+                })
+                ;
+                return false;
+            }
+            if (data === "error") {//服务器返回的数据为error
+                //删除失败
+                swal('删除失败', {
+                    icon: "error",
+                });
+                return false;
+            }
+
+        })
+    }
+
+
+</script>
+
+
+</html>

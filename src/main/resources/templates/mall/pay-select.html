@@ -11,15 +11,15 @@
                 <div class="order-info clearfix">
                     <div class="fl">
                         <h2 class="title">订单提交成功！去付款咯～</h2>
-                        <input type="hidden" id="orderNoValue" th:value="${orderNo}">
+                        <input type="hidden" id="orderNoValue" th:value="${order.order_no}">
                         <p class="order-time" id="J_deliverDesc">订单号：
-                            <th:block th:text="${orderNo}"></th:block>
+                            <th:block th:text="${order.order_no}"></th:block>
                         </p>
                     </div>
                     <div class="fr">
                         <p class="total">
                             应付总额：<span class="money"><em><th:block
-                                th:text="${totalPrice+'.00'}"></th:block></em>元</span>
+                                th:text="${order.total_price+'.00'}"></th:block></em>元</span>
                         </p>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                                 <img onclick="payOrder(1)" th:src="@{/mall/image/pay/payOnline_zfb.png}" alt="支付宝"
                                      style="margin-left: 0;"></li>
                             <li id="J_weixin">
-                                <input type="radio" name="payOnlineBank" id="alipay" value="alipay">
+                                <input type="radio" name="payOnlineBank" id="weixinpay" value="weixinpay">
                                 <img onclick="payOrder(2)" th:src="@{/mall/image/pay/weixinpay.png}" alt="微信支付"
                                      style="margin-left: 0;">
                             </li>
@@ -166,7 +166,7 @@
 
     function payOrder(payType) {
         var orderNo = $("#orderNoValue").val();
-        window.location.href = '/payPage?orderNo=' + orderNo + "&payType=" + payType;
+        window.location.href = '/payPage?order_no=' + orderNo + "&pay_type=" + payType;
     }
 </script>
 </html>

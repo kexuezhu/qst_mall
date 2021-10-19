@@ -48,7 +48,7 @@
                                placeholder="请输入验证码"/>
                         <img class=""
                              id="check_code"
-                             src="../checkCode/creatCheckCode"
+                             src="/checkCode/createCheckCode"
                              style="width: 105px; height: 42px; vertical-align: middle"
                              name="check_code">
 
@@ -79,7 +79,7 @@
             //获取当前时间
             var date = new Date().getTime();
             //为验证码图片加时间戳
-            document.getElementById("check_code").src = "/checkCode/creatCheckCode?" + date;
+            document.getElementById("check_code").src = "/checkCode/createCheckCode?" + date;
         })
 
         //注册按钮点击事件

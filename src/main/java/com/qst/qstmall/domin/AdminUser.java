@@ -5,53 +5,54 @@ package com.qst.qstmall.domin;
  */
 public class AdminUser {
     //管理员id
-    private long adminUserId;
+    private int admin_user_id;
     //管理员登录名称
-    private String adminUsername;
+    private String login_user_name;
     //管理员登录密码
-    private String password;
+    private String login_password;
     //管理员显示昵称
-    private String nickName;
+    private String nick_name;
     //是否锁定 0未锁定 1已锁定无法登陆
-    private int lock;
+    private int locked;
 
-    public long getAdminUserId() {
-        return adminUserId;
+
+    public int getAdmin_user_id() {
+        return admin_user_id;
     }
 
-    public void setAdminUserId(long adminUserId) {
-        this.adminUserId = adminUserId;
+    public void setAdmin_user_id(int admin_user_id) {
+        this.admin_user_id = admin_user_id;
     }
 
-    public String getAdminUsername() {
-        return adminUsername;
+    public String getLogin_user_name() {
+        return login_user_name;
     }
 
-    public void setAdminUsername(String adminUsername) {
-        this.adminUsername = adminUsername;
+    public void setLogin_user_name(String login_user_name) {
+        this.login_user_name = login_user_name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getLogin_password() {
+        return login_password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setLogin_password(String login_password) {
+        this.login_password = login_password;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNick_name() {
+        return nick_name;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNick_name(String nick_name) {
+        this.nick_name = nick_name;
     }
 
-    public int getLock() {
-        return lock;
+    public int getLocked() {
+        return locked;
     }
 
-    public void setLock(int lock) {
-        this.lock = lock;
+    public void setLocked(int locked) {
+        this.locked = locked;
     }
 }

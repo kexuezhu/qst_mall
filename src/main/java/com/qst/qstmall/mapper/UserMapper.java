@@ -4,6 +4,7 @@ import com.qst.qstmall.domin.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -36,6 +37,14 @@ public interface UserMapper {
     //根据用户id修改用户信息
     @Update("UPDATE tb_qst_mall_user SET nick_name=#{nick_name},introduce_sign=#{introduce_sign},address=#{address} WHERE user_id=#{user_id} AND is_deleted=0")
     int updateUserInfo(User user);
+
+    //查询所有用户信息
+    @Select("SELECT * FROM tb_qst_mall_user")
+    ArrayList<User> select_all_user();
+
+    //根据用户id修改用户锁定状态
+    @Update("UPDATE tb_qst_mall_user SET locked_flag=#{locked_flag} WHERE user_id=#{user_id}")
+    int update_locked_flag(User user);
 
 
 }

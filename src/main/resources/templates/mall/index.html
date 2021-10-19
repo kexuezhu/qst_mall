@@ -398,10 +398,7 @@
                 //首次不执行
                 if (!first) {
                     //do something
-                    $.get("/index_recommend", {pageNum: obj.curr, pageSize: obj.limit}, function (data) {
-                        location.reload();
-                        // $('#recommend').replaceAll();
-                    })
+                    location.href="/index.html?pageNum="+obj.curr+"&pageSize="+obj.limit+"#!fenye="+obj.curr;
                 }
             }
         });

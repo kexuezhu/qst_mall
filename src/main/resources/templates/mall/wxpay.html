@@ -30,7 +30,7 @@
         <div class="order">
         </div>
         <div class="amount" id="money">￥
-            <th:block th:text="${totalPrice+'.00'}"></th:block>
+            <th:block th:text="${order.total_price+'.00'}"></th:block>
         </div>
         <div class="qrcode-img-wrapper">
             <div data-role="qrPayImg" class="qrcode-img-area">
@@ -48,10 +48,10 @@
             <div class="time-item" id="msg"><h1>支付完成后，将跳转至订单详情</h1></div>
             <div class="time-item">
                 <h1>订单:
-                    <th:block th:text="${orderNo}"></th:block>
+                    <th:block th:text="${order.order_no}"></th:block>
                 </h1>
             </div>
-            <input type="hidden" id="orderNoValue" th:value="${orderNo}">
+            <input type="hidden" id="orderNoValue" th:value="${order.order_no}">
         </div>
 
         <div class="tip">
@@ -81,10 +81,10 @@
         var orderNo = $("#orderNoValue").val();
         $.ajax({
             type: 'GET',
-            url: '/paySuccess?payType=2&orderNo=' + orderNo,
+            url: '/paySuccess?pay_type=2&order_no=' + orderNo,
             success: function (result) {
-                if (result.resultCode == 200) {
-                    window.location.href = '/orders/' + orderNo;
+                if (result == 200) {
+                    window.location.href = '/order-detail.html?order_no=' + orderNo;
                 } else {
                     swal(result.message, {
                         icon: "error",

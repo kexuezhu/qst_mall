@@ -24,10 +24,14 @@ public class OrderItemService implements OrderItemInterface {
         return orderItems;
     }
 
-
     @Override
     //重写添加订单商品信息
     public void add_orderItem(OrderItem orderItem) {
         orderItemMapper.add_orderItem(orderItem);
     }
+
+
+
+
+
 }

@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,15 +39,57 @@ public class OrderController {
 
     //跳转到订单详情页
     @RequestMapping("/order-detail.html")
-    public ModelAndView orderDetailHtml(HttpServletRequest request){
-
+    public ModelAndView orderDetailHtml(HttpServletRequest request) {
+        //获取请求参数中的订单号
+        String order_no = request.getParameter("order_no");
+        //根据订单号获取订单信息
+        Order order = orderService.get_order(order_no);
 
         ModelAndView modelAndView = new ModelAndView("mall/order-detail");
+        modelAndView.addObject("order", order);//添加订单信息
         return modelAndView;
     }
 
+    //跳转到选择支付方式页面
+    @RequestMapping("/pay-select.html")
+    public ModelAndView patSelectHtml(HttpServletRequest request) {
+        //获取请求参数中的订单号
+        String order_no = request.getParameter("order_no");
+        //根据订单号获取订单信息
+        Order order = orderService.get_order(order_no);
 
-    //保存订单，并跳转到我的订单页面
+        ModelAndView modelAndView = new ModelAndView("mall/pay-select");
+        modelAndView.addObject("order", order);//添加订单信息
+        return modelAndView;
+    }
+
+    //跳转到支付页面
+    @RequestMapping("/payPage")
+    public ModelAndView payPage(HttpServletRequest request) {
+        //获取请求参数中的订单号
+        String order_no = request.getParameter("order_no");
+        //获取请求参数中的支付方式
+        int pay_type = Integer.valueOf(request.getParameter("pay_type"));
+        //根据订单号获取订单信息
+        Order order = orderService.get_order(order_no);
+
+        if(pay_type == 1){//支付宝支付
+            ModelAndView modelAndView = new ModelAndView("mall/alipay");
+            modelAndView.addObject("order", order);//添加订单信息
+            return modelAndView;
+        }
+        if(pay_type == 2){//微信支付
+            ModelAndView modelAndView = new ModelAndView("mall/wxpay");
+            modelAndView.addObject("order", order);//添加订单信息
+            return modelAndView;
+        }
+
+        //选择支付页面错误
+        ModelAndView modelAndView = new ModelAndView("error/error_404");
+        return modelAndView;
+    }
+
+    //保存订单，并跳转到选择支付方式页面
     @RequestMapping("/saveOrder")
     public String saveOrder(String cart_item_id, HttpServletRequest request, HttpServletResponse response) {
         /*将包含所有购物项id的字符串转换为list集合*/
@@ -84,7 +128,7 @@ public class OrderController {
         //添加新订单
         orderService.add_order(order_no, user_id, total_price, address);
         //根据订单号 获取新订单的订单id
-        long order_id = orderService.get_order_id(order_no);
+        long order_id = orderService.get_order(order_no).getOrder_id();
         //遍历订单商品集合缓存对象
         for (OrderItem orderItem : orderItems) {
             orderItem.setOrder_id(order_id);//将获取的订单id添加到订单商品缓存对象中
@@ -92,6 +136,79 @@ public class OrderController {
             orderItemService.add_orderItem(orderItem);//将封装好的订单商品添加到数据库中
         }
 
-        return "redirect:/user/my-orders.html";//跳转到我的订单详情页
+        return "forward:/pay-select.html?order_no="+order_no;//转发到选择支付方式页面
     }
+
+    //处理取消订单请求
+    @RequestMapping("/order-cancel")
+    @ResponseBody
+    public String orderCancel(HttpServletRequest request) {
+        //获取请求参数中的订单号
+        String order_no = request.getParameter("order_no");
+        /*取消订单
+         *更新订单状态（-1 已取消）
+         */
+        String s = orderService.update_order(order_no,-1,null,null);
+        if(s == "success"){//取消订单成功
+            return "200";//向客户端返回取消订单成功信息
+        }
+        //取消订单失败
+        return null;
+    }
+
+    //处理确认收货请求
+    @RequestMapping("/order-confirm")
+    @ResponseBody
+    public String orderConfirm(HttpServletRequest request) {
+        //获取请求参数中的订单号
+        String order_no = request.getParameter("order_no");
+        /*确认收货
+         *更新订单状态（4 交易成功）
+         */
+        String s = orderService.update_order(order_no,4,null,null);
+        if(s == "success"){//确认收货成功
+            return "200";//向客户端返回确认收货成功信息
+        }
+        //确认收货失败
+        return null;
+    }
+
+    //处理删除订单请求
+    @RequestMapping("/order-delete")
+    @ResponseBody
+    public String orderDelete(HttpServletRequest request) {
+        //获取请求参数中的订单号
+        String order_no = request.getParameter("order_no");
+        /*删除订单
+         *修改删除标识字段（1-已删除）
+         */
+        String s = orderService.delete_order(order_no);
+        if(s == "success"){//删除订单成功
+            return "200";//向客户端返回删除订单成功信息
+        }
+        //删除订单失败
+        return null;
+    }
+
+    //处理支付完成请求
+    @RequestMapping("/paySuccess")
+    @ResponseBody
+    public String paySuccess(int pay_type,String order_no,HttpServletRequest request) {
+        /* 支付完成
+         * 修改支付状态字段（1-支付成功）
+         * 修改订单状态（1-已支付）
+         * 修改支付方式（1.支付宝支付 2.微信支付）
+         */
+        orderService.update_order(order_no,null,null,1);//修改支付状态
+        orderService.update_order(order_no,1,null,null);//修改订单状态
+        String s = orderService.update_order(order_no,null,pay_type,null);//修改支付方式
+        if(s == "success"){//支付完成请求成功
+            orderService.update_order_pay_time(order_no);//修改支付时间
+            return "200";//向客户端返回支付成功信息
+        }
+        //支付失败
+        return null;
+    }
+
+
 }

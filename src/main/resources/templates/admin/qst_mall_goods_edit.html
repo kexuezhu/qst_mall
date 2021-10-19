@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--商品修改页面-->
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment"></header>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">商品信息编辑</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="goodsForm" onsubmit="return false;">
+                            <div class="form-group" style="display:flex;">
+                                <label class="control-label">请选择分类:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <select class="form-control col-sm-3" id="level_one"
+                                        data-placeholder="请选择分类...">
+                                    <option value=""></option>
+                                    <th:block th:unless="${null == goodsCategoryLevelFirsts}">
+                                        <th:block th:each="c : ${goodsCategoryLevelFirsts}">
+                                            <option th:value="${c.category_id}" th:text="${c.category_name}"
+                                                    th:selected="${null !=category_id_first and category_id_first==c.category_id} ?true:false"></option>
+                                        </th:block>
+                                    </th:block>
+                                </select>&nbsp;
+                                <select class="form-control col-sm-3" id="level_two"
+                                        data-placeholder="请选择分类...">
+                                    <th:block th:unless="${null == goodsCategoryLevelSeconds}">
+                                        <th:block th:each="c : ${goodsCategoryLevelSeconds}">
+                                            <option th:value="${c.category_id}" th:text="${c.category_name}"
+                                                    th:selected="${null !=category_id_second and category_id_second==c.category_id} ?true:false">
+                                            </option>
+                                        </th:block>
+                                    </th:block>
+                                </select>&nbsp;
+                                <select class="form-control col-sm-3" id="level_three"
+                                        data-placeholder="请选择分类...">
+                                    <th:block th:unless="${null == goodsCategoryLevelThirds}">
+                                        <th:block th:each="c : ${goodsCategoryLevelThirds}">
+                                            <option th:value="${c.category_id}" th:text="${c.category_name}"
+                                                    th:selected="${null !=category_id_third and category_id_third==c.category_id} ?true:false">
+                                            </option>
+                                        </th:block>
+                                    </th:block>
+                                </select>
+                            </div>
+                            <div class="form-group" style="display:flex;">
+                                <input type="hidden" id="goodsId" name="goodsId"
+                                       th:value="${goodsInfo!=null and goodsInfo.goods_id!=null }?${goodsInfo.goods_id}: 0">
+                                <input type="text" class="form-control col-sm-6" id="goodsName" name="goodsName"
+                                       placeholder="*请输入商品名称(必填)"
+                                       th:value="${goodsInfo!=null and goodsInfo.goods_name!=null }?${goodsInfo.goods_name}: ''"
+                                       required="true">
+                                &nbsp;&nbsp;
+                                <input type="text" class="form-control col-sm-6" id="goodsIntro" name="goodsIntro"
+                                       placeholder="*请输入商品简介(100字以内)"
+                                       th:value="${goodsInfo!=null and goodsInfo.goods_intro!=null }?${goodsInfo.goods_intro}: ''"
+                                       required="true">
+                            </div>
+                            <div class="form-group" style="display:flex;">
+                                <input type="number" class="form-control col-sm-6" id="originalPrice"
+                                       name="originalPrice"
+                                       placeholder="*请输入商品价格"
+                                       th:value="${goodsInfo!=null and goodsInfo.original_price!=null }?${goodsInfo.original_price}: 1"
+                                       required="true">
+                            </div>
+                            <div class="form-group" style="display:flex;">
+                                <input type="number" class="form-control col-sm-6" id="stockNum" name="stockNum"
+                                       placeholder="*请输入商品库存数"
+                                       th:value="${goodsInfo!=null and goodsInfo.stock_num!=null }?${goodsInfo.stock_num}: 0"
+                                       required="true">
+                                &nbsp;&nbsp;
+                                <input type="text" class="form-control col-sm-6" id="tag" name="tag"
+                                       placeholder="*请输入商品小标签"
+                                       th:value="${goodsInfo!=null and goodsInfo.tag!=null }?${goodsInfo.tag}: ''"
+                                       required="true">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">上架状态:&nbsp;</label>
+                                <input name="goodsSellStatus" type="radio" id="goodsSellStatusTrue" checked=true
+                                       th:checked="${null==goodsInfo||(null !=goodsInfo and null !=goodsInfo.goods_sell_status and goodsInfo.goods_sell_status==0)} ?true:false"
+                                       value="0"/>&nbsp;上架&nbsp;
+                                <input name="goodsSellStatus" type="radio" id="goodsSellStatusFalse" value="1"
+                                       th:checked="${null !=goodsInfo and null !=goodsInfo.goods_sell_status and goodsInfo.goods_sell_status==1} ?true:false"/>&nbsp;下架&nbsp;
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    <i class="fa fa-picture-o"></i>上传商品主图
+                                    <br>
+                                    <th:block th:if="${null == goodsInfo}">
+                                        <img id="goodsCoverImg" src="/admin/dist/img/img-upload.png"
+                                             style="height: 100px;width: 100px;">
+                                    </th:block>
+                                    <th:block th:unless="${null == goodsInfo}">
+                                        <img id="goodsCoverImg" th:src="${goodsInfo.goods_cover_img}"
+                                             style="width:160px ;height: 160px;display:block;">
+                                    </th:block>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group" style="text-align: left">
+                                <div class="col-sm-4">
+                                    <input type="file" id="upload" name="image">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="editor" name="editor" style="width: 100%; height: 750px;"
+                                          th:utext="${goodsInfo!=null and goodsInfo.goods_detail_content !=null}?${goodsInfo.goods_detail_content}: ''">
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <!-- 按钮 -->
+                                &nbsp;<button class="btn btn-info float-right" style="margin-left: 5px;"
+                                              id="confirmButton">保存商品
+                            </button>&nbsp;
+                                &nbsp;<button class="btn btn-secondary float-right" style="margin-left: 5px;"
+                                              id="cancelButton">返回商品列表
+                            </button>&nbsp;
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+
+</body>
+
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<!-- ajaxupload -->
+<script th:src="@{/admin/plugins/ajaxupload/ajaxupload.js}"></script>
+<!-- kindeditor -->
+<script th:src="@{/admin/plugins/kindeditor-4.1.10/kindeditor-all.js}"></script>
+<script th:src="@{/admin/plugins/kindeditor-4.1.10/lang/zh_CN.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+<script th:src="@{/admin/dist/js/qst_mall_goods_edit.js}"></script>
+
+<script>
+    //预览上传图片
+    var fileInput = document.getElementById("upload"),
+        previewImg = document.getElementById('goodsCoverImg');
+    fileInput.addEventListener('change', function () {
+        var file = this.files[0];
+        var reader = new FileReader();
+        // 调用reader.readAsDataURL()方法，把图片转成base64
+        reader.readAsDataURL(file);
+        // 监听reader对象的的onload事件，当图片加载完成时，把base64编码賦值给预览图片
+        reader.addEventListener("load", function () {
+            previewImg.src = reader.result;
+        }, false);
+    }, false);
+
+    //1级分类下拉框
+    $("#level_one").change(function () {
+        $("#level_two").html("");
+        $("#level_three").html("");
+        var category_id = $("#level_one option:selected").val();
+        $.ajax({
+            url: "/admin/goods/edit/first",
+            type: "GET",
+            data: {"category_id": category_id},
+            success: function (data) {
+                var goodsCategoryLevelSeconds = JSON.stringify(data);    //将json对象转换为字符串
+                goodsCategoryLevelSeconds = eval("(" + goodsCategoryLevelSeconds + ")");   //解析json
+
+                $('#level_two').append(new Option("",""));
+                $.each(goodsCategoryLevelSeconds,function(index,item){
+                    $('#level_two').append(new Option(item.category_name,item.category_id));//往下拉菜单里添加元素
+                })
+            }
+        })
+    });
+
+    //2级分类下拉框
+    $("#level_two").change(function () {
+        $("#level_three").html("");
+        var category_id = $("#level_two option:selected").val();
+        $.ajax({
+            url: "/admin/goods/edit/second",
+            type: "GET",
+            data: {"category_id": category_id},
+            success: function (data) {
+                var goodsCategoryLevelThirds = JSON.stringify(data);    //将json对象转换为字符串
+                goodsCategoryLevelThirds = eval("(" + goodsCategoryLevelThirds + ")");   //解析json
+
+                $('#level_three').append(new Option("",""));
+                $.each(goodsCategoryLevelThirds,function(index,item){
+                    $('#level_three').append(new Option(item.category_name,item.category_id));//往下拉菜单里添加元素
+                })
+            }
+        })
+    });
+
+
+
+</script>
+
+
+</html>

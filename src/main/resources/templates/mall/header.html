@@ -16,7 +16,7 @@
     <div class="center">
         <ul class="fl">
             <li><a th:href="@{/index.html}">青软商城</a></li>
-            <li><a arget="_blank">后台管理系统</a></li>
+            <li><a th:href="@{/admin/index.html}" target="_blank">后台管理系统</a></li>
         </ul>
         <div class="fr">
             <th:block th:unless="${session.user==null}">

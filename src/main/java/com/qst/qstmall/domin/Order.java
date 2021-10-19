@@ -1,5 +1,7 @@
 package com.qst.qstmall.domin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -23,8 +25,9 @@ public class Order {
     //'0.无 1.支付宝支付 2.微信支付
     private int pay_type;
     //支付时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date pay_time;
-    //订单状态:0.待支付 1.已支付 2.配货完成 3:出库成功 4.交易成功 -1.手动关闭 -2.超时关闭 -3.商家关闭
+    //订单状态:0.待支付 1.已支付 2.配货完成 3.出库成功 4.交易成功 -1.手动关闭 -2.超时关闭 -3.商家关闭
     private int order_status;
     //订单body
     private String extra_info;
@@ -37,9 +40,9 @@ public class Order {
     //删除标识字段(0-未删除 1-已删除)
     private boolean is_deleted;
     //创建时间
-    private Date create_time;
+    private String create_time;
     //最新修改时间
-    private Date update_time;
+    private String update_time;
 
     public ArrayList<OrderItem> getOrderItems() {
         return orderItems;
@@ -145,7 +148,7 @@ public class Order {
         this.user_address = user_address;
     }
 
-    public boolean isIs_deleted() {
+    public boolean getIs_deleted() {
         return is_deleted;
     }
 
@@ -153,19 +156,41 @@ public class Order {
         this.is_deleted = is_deleted;
     }
 
-    public Date getCreate_time() {
+    public String getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(String create_time) {
         this.create_time = create_time;
     }
 
-    public Date getUpdate_time() {
+    public String getUpdate_time() {
         return update_time;
     }
 
-    public void setUpdate_time(Date update_time) {
+    public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderItems=" + orderItems +
+                ", order_id=" + order_id +
+                ", order_no='" + order_no + '\'' +
+                ", user_id=" + user_id +
+                ", total_price=" + total_price +
+                ", pay_status=" + pay_status +
+                ", pay_type=" + pay_type +
+                ", pay_time=" + pay_time +
+                ", order_status=" + order_status +
+                ", extra_info='" + extra_info + '\'' +
+                ", user_name='" + user_name + '\'' +
+                ", user_phone='" + user_phone + '\'' +
+                ", user_address='" + user_address + '\'' +
+                ", is_deleted=" + is_deleted +
+                ", create_time=" + create_time +
+                ", update_time=" + update_time +
+                '}';
     }
 }

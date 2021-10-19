@@ -24,4 +24,18 @@ public interface GoodsInfoInterface {
     //声明根据关键词模糊查询对应的商品信息
     ArrayList<GoodsInfo> getGoodsInfo_goods_name(String keyword);
 
+    //声明获取所有商品信息
+    ArrayList<GoodsInfo> get_allGoodsInfo();
+
+    //声明根据商品id修改商品上架状态
+    boolean update_goods_sell_status(long goods_id,int goods_sell_status,int update_user);
+
+    //声明添加商品方法
+    void add_goodsInfo(GoodsInfo goodsInfo);
+
+    //声明根据商品id修改商品信息
+    boolean update_goodsInfo(GoodsInfo goodsInfo);
+
+
+
 }

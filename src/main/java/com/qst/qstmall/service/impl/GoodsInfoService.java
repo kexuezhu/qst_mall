@@ -73,5 +73,40 @@ public class GoodsInfoService implements GoodsInfoInterface {
         return goodsInfos;
     }
 
+    @Override
+    //重写获取所有商品信息
+    public ArrayList<GoodsInfo> get_allGoodsInfo(){
+        ArrayList<GoodsInfo> goodsInfos = goodsInfoMapper.select_all_goodsInfo();
+        return goodsInfos;
+    }
+
+    @Override
+    //重写根据商品id修改商品上架状态
+    public boolean update_goods_sell_status(long goods_id,int goods_sell_status,int update_user){
+        //修改商品上架状态
+        int i = goodsInfoMapper.update_goods_sell_status(goods_id, goods_sell_status, update_user);
+        if(i == 0){//修改失败
+            return false;//返回假
+        }
+        //修改成功
+        return true;//返回真
+    }
+
+    @Override
+    //重写添加商品方法
+    public void add_goodsInfo(GoodsInfo goodsInfo){
+        goodsInfoMapper.insert_goodsInfo(goodsInfo);
+    }
+
+    @Override
+    //重写根据商品id修改商品信息
+    public boolean update_goodsInfo(GoodsInfo goodsInfo){
+        int i = goodsInfoMapper.update_goodsInfo(goodsInfo);
+        if(i==0){//商品信息修改失败
+            return false;//返回假
+        }
+        //商品信息修改成功
+        return true;//返回真
+    }
 
 }

@@ -26,12 +26,12 @@ public class GoodsCategoryLevelSecond {
     private boolean is_deleted;
     //创建时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date create_time;
+    private String create_time;
     //创建者id
     private int create_user;
     //修改时间
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date update_time;
+    private String update_time;
     //修改者id
     private int update_user;
 
@@ -83,11 +83,11 @@ public class GoodsCategoryLevelSecond {
         this.is_deleted = is_deleted;
     }
 
-    public Date getCreate_time() {
+    public String getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(String create_time) {
         this.create_time = create_time;
     }
 
@@ -99,11 +99,11 @@ public class GoodsCategoryLevelSecond {
         this.create_user = create_user;
     }
 
-    public Date getUpdate_time() {
+    public String getUpdate_time() {
         return update_time;
     }
 
-    public void setUpdate_time(Date update_time) {
+    public void setUpdate_time(String update_time) {
         this.update_time = update_time;
     }
 

@@ -23,12 +23,12 @@ public class User {
     //收货地址
     private String address;
     //注销标识字段(0-正常 1-已注销)
-    private boolean is_delete;
+    private int is_deleted;
     //锁定标识字段(0-未锁定 1-已锁定)
-    private boolean locked_flag;
+    private int locked_flag;
     //注册时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date create_time;
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private String create_time;
 
     //我的购物车（根据商品id确定购物车内的商品）
     private ArrayList<Long> myShoppingCart;
@@ -43,7 +43,7 @@ public class User {
                 ", nick_name='" + nick_name + '\'' +
                 ", introduce_sign='" + introduce_sign + '\'' +
                 ", address='" + address + '\'' +
-                ", is_delete=" + is_delete +
+                ", is_delete=" + is_deleted +
                 ", locked_flag=" + locked_flag +
                 ", create_time=" + create_time +
                 ", myShoppingCart=" + myShoppingCart +
@@ -98,27 +98,27 @@ public class User {
         this.address = address;
     }
 
-    public boolean isIs_delete() {
-        return is_delete;
+    public int getIs_deleted() {
+        return is_deleted;
     }
 
-    public void setIs_delete(boolean is_delete) {
-        this.is_delete = is_delete;
+    public void setIs_deleted(int is_deleted) {
+        this.is_deleted = is_deleted;
     }
 
-    public boolean isLocked_flag() {
+    public int getLocked_flag() {
         return locked_flag;
     }
 
-    public void setLocked_flag(boolean locked_flag) {
+    public void setLocked_flag(int locked_flag) {
         this.locked_flag = locked_flag;
     }
 
-    public Date getCreate_time() {
+    public String getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(String create_time) {
         this.create_time = create_time;
     }
 

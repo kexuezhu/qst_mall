@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment">
+</header>
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+</style>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains 图标content -->
+    <div class="content-wrapper">
+        <!-- Content Header (图标header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">轮播图管理</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <div class="grid-btn">
+                            <button class="btn btn-info" onclick="add_carousel()">
+                                <i class="fa fa-plus"></i>&nbsp;新增
+                            </button>
+                        </div>
+                        <br>
+                        <table class="table table-bordered">
+                            <thead>
+                            <th>轮播图ID</th>
+                            <th>跳转链接</th>
+                            <th>排序值</th>
+                            <th>添加时间</th>
+                            </thead>
+                            <th:block th:unless="${#lists.isEmpty(carousels)}">
+                                <th:block th:each="carousel : ${carousels}">
+                                    <tr>
+                                        <td><a th:href="${carousel.carousel_url}"><p
+                                                th:text="${carousel.carousel_id}"></p></a></td>
+                                        <td th:id="'r_url'+${carousel.carousel_id}"
+                                            th:text="${carousel.redirect_url}"></td>
+                                        <td th:id="'c_rank'+${carousel.carousel_id}"
+                                            th:text="${carousel.carousel_rank}"></td>
+                                        <td th:text="${carousel.create_time}"></td>
+                                        <td style="text-align: center">
+                                            <button class="btn btn-info"
+                                                    th:onclick="'update_carousel('+${carousel.carousel_id}+')'">
+                                                <i class="fa fa-pencil-square-o"></i>&nbsp;修改
+                                            </button>
+                                            <button class="btn btn-danger"
+                                                    th:onclick="'delete_carousel('+${carousel.carousel_id}+')'">
+                                                <i class="fa fa-trash-o"></i>&nbsp;删除
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </th:block>
+                        </table>
+                        <div id="jqGridPager"></div>
+                    </div><!-- /.card-body -->
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+        <div class="content">
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="carouselModal" tabindex="-1" role="dialog"
+                 aria-labelledby="carouselModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h6 class="modal-title" id="carouselModalLabel">Modal</h6>
+                        </div>
+                        <div class="modal-body">
+                            <form id="indexConfigForm" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <div class="alert alert-danger" id="edit-error-msg" style="display: none;">
+                                        错误信息展示栏。
+                                    </div>
+                                </div>
+                                <div id="insert1" class="form-group">
+                                    <div class="col-sm-4">
+                                        <img id="carouselImg" src="/admin/dist/img/img-upload.png"
+                                             style="height: 64px;width: 100px;">
+                                    </div>
+                                </div>
+                                <br/>
+                                <div id="insert2" class="form-group">
+                                    <div class="col-sm-4">
+                                        <input type="file" id="upload" name="image">
+                                    </div>
+                                </div>
+                                <div id="insert3" class="form-group">
+                                    <label for="redirectUrl" class="control-label">轮播图ID:</label>
+                                    <input type="text" class="form-control" id="carousel_id" name="carousel_id">
+                                </div>
+                                <div class="form-group">
+                                    <label for="redirectUrl" class="control-label">跳转链接:</label>
+                                    <input type="text" class="form-control" id="redirectUrl" name="redirect_url"
+                                           placeholder="请输入跳转链接" value="##">
+                                </div>
+                                <div class="form-group">
+                                    <label for="carouselRank" class="control-label">排序值:</label>
+                                    <input type="number" class="form-control" id="carouselRank" name="carousel_rank"
+                                           placeholder="请输入排序值" value="0">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" onclick="confirm_update_carousel()">确认
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+</body>
+
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/grid.locale-cn.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+
+<script>
+    //模态框关闭后重置数据
+    $('#carouselModal').on('hidden.bs.modal', function () {
+        location.reload();
+    });
+
+    //新增轮播图按钮事件
+    function add_carousel() {
+        $('.modal-title').html('新增轮播图');
+        $('#insert1').show();
+        $('#insert2').show();
+        $('#carouselModal').modal('show');
+        $('#insert3').hide();
+
+    }
+
+    //预览上传图片
+    var fileInput = document.getElementById("upload"),
+        previewImg = document.getElementById('carouselImg');
+    fileInput.addEventListener('change', function () {
+        var file = this.files[0];
+        var reader = new FileReader();
+        // 调用reader.readAsDataURL()方法，把图片转成base64
+        reader.readAsDataURL(file);
+        // 监听reader对象的的onload事件，当图片加载完成时，把base64编码賦值给预览图片
+        reader.addEventListener("load", function () {
+            previewImg.src = reader.result;
+        }, false);
+    }, false);
+
+
+    //修改轮播图按钮事件
+    function update_carousel(carousel_id) {
+        var r_url = "r_url" + carousel_id;
+        var redirect_url = document.getElementById(r_url).innerHTML;
+        var c_rank = "c_rank" + carousel_id;
+        var carousel_rank = document.getElementById(c_rank).innerHTML;
+        $('.modal-title').html('修改轮播图');
+        $('#redirectUrl').val(redirect_url);
+        $('#carouselRank').val(carousel_rank);
+        $('#carousel_id').val(carousel_id);
+        $('#carouselModal').modal('show');
+        $('#insert1').hide();
+        $('#insert2').hide();
+        $('#insert3').hide();
+    }
+
+    //确认修改轮播图按钮事件
+    function confirm_update_carousel() {
+        var carousel_id = $('#carousel_id').val();
+        var redirect_url = $('#redirectUrl').val();
+        var carousel_rank = $('#carouselRank').val();
+
+        var formData = new FormData();
+        formData.append("image", $('#upload')[0].files[0]);
+        formData.append("carousel_id",carousel_id);
+        formData.append("redirect_url",redirect_url);
+        formData.append("carousel_rank",carousel_rank);
+        $.ajax({
+            type: "POST",
+            url: "/admin/carousel/judge",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data === "update_success") {//服务器返回的数据为update_success
+                    //修改成功
+                    swal('修改成功', {
+                        icon: "success",
+                    }).then((flag) => {
+                        if (flag) {
+                            location.reload();
+                        }
+                    });
+                    return false;
+                }
+                if (data === "update_error") {//服务器返回的数据为update_error
+                    //修改失败
+                    swal('修改失败', {
+                        icon: "error",
+                    });
+                    return false;
+                }
+                if (data === "add_success") {//服务器返回的数据为add_success
+                    //添加成功
+                    swal('添加成功', {
+                        icon: "success",
+                    }).then((flag) => {
+                        if (flag) {
+                            location.reload();
+                        }
+                    });
+                    return false;
+                }
+
+            }
+        });
+
+
+
+    }
+
+    //删除轮播图按钮事件
+    function delete_carousel(carousel_id) {
+        $.get("/admin/carousel/delete", {"carousel_id": carousel_id}, function (data) {
+            if (data === "success") {//服务器返回的数据为success
+                //删除成功
+                swal('删除成功', {
+                    icon: "success",
+                }).then((flag) => {
+                    if (flag) {
+                        location.reload();
+                    }
+                })
+                ;
+                return false;
+            }
+            if (data === "error") {//服务器返回的数据为error
+                //删除失败
+                swal('删除失败', {
+                    icon: "error",
+                });
+                return false;
+            }
+
+        })
+    }
+
+</script>
+
+
+</html>

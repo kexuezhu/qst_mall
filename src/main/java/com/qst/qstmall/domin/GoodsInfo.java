@@ -32,16 +32,16 @@ public class GoodsInfo {
     private int stock_num;
     //商品标签
     private String tag;
-    //商品上架状态 0-下架 1-上架
-    private boolean goods_sell_status;
+    //商品上架状态 0-上架 1-下架
+    private int goods_sell_status;
     //添加者主键id
     private int create_user;
     //商品添加时间
-    private Date create_time;
+    private String create_time;
     //修改者主键id
     private int update_user;
     //商品修改时间
-    private Date update_time;
+    private String update_time;
 
     public long getGoods_id() {
         return goods_id;
@@ -123,11 +123,11 @@ public class GoodsInfo {
         this.tag = tag;
     }
 
-    public boolean isGoods_sell_status() {
+    public int getGoods_sell_status() {
         return goods_sell_status;
     }
 
-    public void setGoods_sell_status(boolean goods_sell_status) {
+    public void setGoods_sell_status(int goods_sell_status) {
         this.goods_sell_status = goods_sell_status;
     }
 
@@ -139,11 +139,11 @@ public class GoodsInfo {
         this.create_user = create_user;
     }
 
-    public Date getCreate_time() {
+    public String getCreate_time() {
         return create_time;
     }
 
-    public void setCreate_time(Date create_time) {
+    public void setCreate_time(String create_time) {
         this.create_time = create_time;
     }
 
@@ -155,11 +155,11 @@ public class GoodsInfo {
         this.update_user = update_user;
     }
 
-    public Date getUpdate_time() {
+    public String getUpdate_time() {
         return update_time;
     }
 
-    public void setUpdate_time(Date update_time) {
+    public void setUpdate_time(String update_time) {
         this.update_time = update_time;
     }
 

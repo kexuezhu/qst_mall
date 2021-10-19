@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:replace="admin/header::header-fragment">
+</header>
+<style>
+    .ui-jqgrid tr.jqgrow td {
+        white-space: normal !important;
+        height: auto;
+        vertical-align: text-top;
+        padding-top: 2px;
+    }
+</style>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains 图标content -->
+    <div class="content-wrapper">
+        <!-- Content Header (图标header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">分类管理</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <div class="grid-btn">
+                            <button class="btn btn-info" onclick="add_category()"><i
+                                    class="fa fa-plus"></i>&nbsp;新增
+                            </button>
+                            <th:block th:if="${category_level}!=1">
+                                <button class="btn btn-info" onclick="back_category()"><i
+                                        class="fa fa-backward"></i>&nbsp;返回
+                                </button>
+                            </th:block>
+                        </div>
+                        <br>
+                        <table class="table table-bordered">
+                            <thead>
+                            <th>分类ID</th>
+                            <th>分类名称</th>
+                            <th>父分类ID</th>
+                            <th>排序值</th>
+                            <th>添加时间</th>
+                            </thead>
+                            <th:block th:unless="${#lists.isEmpty(goodsCategories)}">
+                                <th:block th:each="goodsCategory : ${goodsCategories}">
+                                    <tr>
+                                        <td th:text="${goodsCategory.category_id}"></td>
+                                        <td th:id="'c_name'+${goodsCategory.category_id}"
+                                            th:text="${goodsCategory.category_name}"></td>
+                                        <td th:id="'p_id'+${goodsCategory.category_id}"
+                                            th:text="${goodsCategory.parent_id}"></td>
+                                        <td th:id="'c_rank'+${goodsCategory.category_id}"
+                                            th:text="${goodsCategory.category_rank}"></td>
+                                        <td th:text="${goodsCategory.create_time}"></td>
+                                        <th:block th:if="${category_level}!=3">
+                                            <td>
+                                                <button class="btn btn-info"
+                                                        th:onclick="'manage_category('+${goodsCategory.category_id}+')'">
+                                                    <i class="fa fa-list"></i>&nbsp;下级分类管理
+                                                </button>
+                                            </td>
+                                        </th:block>
+                                        <td style="text-align: center">
+                                            <button class="btn btn-info"
+                                                    th:onclick="'update_category('+${goodsCategory.category_id}+')'">
+                                                <i class="fa fa-pencil-square-o"></i>&nbsp;修改
+                                            </button>
+                                            <button class="btn btn-danger"
+                                                    th:onclick="'delete_category('+${goodsCategory.category_id}+')'">
+                                                <i class="fa fa-trash-o"></i>&nbsp;删除
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </th:block>
+                            </th:block>
+                        </table>
+                        <div id="jqGridPager"></div>
+                    </div><!-- /.card-body -->
+                </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+        <div class="content">
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h6 class="modal-title" id="categoryModalLabel">Modal</h6>
+                        </div>
+                        <div class="modal-body">
+                            <form id="categoryForm">
+                                <div class="form-group">
+                                    <div class="alert alert-danger" id="edit-error-msg" style="display: none;">
+                                        错误信息展示栏。
+                                    </div>
+                                </div>
+                                <input type="hidden" id="categoryId">
+                                <input type="hidden" id="categoryLevel" th:value="${category_level}">
+                                <input type="hidden" id="parentId" th:value="${parent_id}">
+                                <th:block th:if="${back_parent_id}!=null"><input type="hidden" id="backParentId"
+                                                                                 th:value="${back_parent_id}">
+                                </th:block>
+                                <div class="form-group">
+                                    <label for="categoryName" class="control-label">分类名称:</label>
+                                    <input type="text" class="form-control" id="categoryName" name="categoryName"
+                                           placeholder="请输入分类名称" required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="categoryName" class="control-label">排序值:</label>
+                                    <input type="number" class="form-control" id="categoryRank" name="categoryRank"
+                                           placeholder="请输入分类排序值" required="true">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" onclick="confirm_update_category()">确认
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+</body>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.3.0/grid.locale-cn.js}"></script>
+
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+<script th:src="@{/admin/dist/js/qst_mall_category.js}"></script>
+
+<script>
+    //模态框关闭后重置数据
+    $('#categoryModal').on('hidden.bs.modal', function () {
+        location.reload();
+    });
+
+    //新增商品分类按钮事件
+    function add_category() {
+        $('.modal-title').html('商品分类添加');
+        $('#categoryModal').modal('show');
+    }
+
+    //修改商品分类按钮事件
+    function update_category(category_id) {
+        var c_name = "c_name" + category_id;
+        var category_name = document.getElementById(c_name).innerHTML;
+        var c_rank = "c_rank" + category_id;
+        var category_rank = document.getElementById(c_rank).innerHTML;
+        $('.modal-title').html('修改商品分类');
+        $('#categoryId').val(category_id);
+        $('#categoryName').val(category_name);
+        $('#categoryRank').val(category_rank);
+
+        $('#categoryModal').modal('show');
+    }
+
+    //确认修改商品分类按钮事件
+    function confirm_update_category() {
+        var category_id = $('#categoryId').val();
+        var category_name = $('#categoryName').val();
+        var category_rank = $('#categoryRank').val();
+        var parent_id = $('#parentId').val();
+        var category_level = $('#categoryLevel').val();
+
+        //category_id内容为空，请求增加商品分类
+        if (category_id == '') {
+            $.ajax({
+                type: "GET",
+                url: "/admin/categories/add",
+                data: {
+                    "category_level": category_level,
+                    "parent_id": parent_id,
+                    "category_name": category_name,
+                    "category_rank": category_rank
+                },
+                success: function (data) {
+                    if (data === "add_success") {//服务器返回的数据为add_success
+                        //添加成功
+                        swal('添加成功', {
+                            icon: "success",
+                        }).then((flag) => {
+                            if (flag) {
+                                location.reload();
+                            }
+                        });
+                        return false;
+                    }
+
+                }
+            });
+
+            return;
+        }
+
+        //category_id内容不为空，请求修改商品分类
+        $.ajax({
+            type: "GET",
+            url: "/admin/categories/update",
+            data: {
+                "category_id": category_id,
+                "category_level": category_level,
+                "category_name": category_name,
+                "category_rank": category_rank
+            },
+            success: function (data) {
+                if (data === "update_success") {//服务器返回的数据为update_success
+                    //修改成功
+                    swal('修改成功', {
+                        icon: "success",
+                    }).then((flag) => {
+                        if (flag) {
+                            location.reload();
+                        }
+                    });
+                    return false;
+                }
+                if (data === "update_error") {//服务器返回的数据为update_error
+                    //修改失败
+                    swal('修改失败', {
+                        icon: "error",
+                    });
+                    return false;
+                }
+
+            }
+        });
+
+    }
+
+    //删除商品分类按钮事件
+    function delete_category(category_id) {
+        $.get("/admin/categories/delete", {"category_id": category_id}, function (data) {
+            if (data === "success") {//服务器返回的数据为success
+                //删除成功
+                swal('删除成功', {
+                    icon: "success",
+                }).then((flag) => {
+                    if (flag) {
+                        location.reload();
+                    }
+                })
+                ;
+                return false;
+            }
+            if (data === "error") {//服务器返回的数据为error
+                //删除失败
+                swal('删除失败', {
+                    icon: "error",
+                });
+                return false;
+            }
+
+        })
+    }
+
+    //下级分类管理按钮事件
+    function manage_category(category_id) {
+        var category_level = $('#categoryLevel').val();
+        var parent_id = $('#parentId').val();
+
+        window.location.href = "/admin/categories?function=manage&category_id=" + category_id + "&category_level=" + category_level + "&parent_id=" + parent_id;
+    }
+
+    //返回按钮事件
+    function back_category() {
+        var back_parent_id = $('#backParentId').val();
+        var category_level = $('#categoryLevel').val();
+
+        window.location.href = "/admin/categories?function=back&back_parent_id=" + back_parent_id + "&category_level=" + category_level;
+    }
+
+
+</script>
+
+
+</html>

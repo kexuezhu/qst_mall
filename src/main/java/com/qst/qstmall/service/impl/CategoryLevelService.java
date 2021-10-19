@@ -3,6 +3,7 @@ package com.qst.qstmall.service.impl;
 import com.qst.qstmall.domin.GoodsCategoryLevelFirst;
 import com.qst.qstmall.domin.GoodsCategoryLevelSecond;
 import com.qst.qstmall.domin.GoodsCategoryLevelThird;
+import com.qst.qstmall.domin.IndexConfig;
 import com.qst.qstmall.mapper.GoodsCategoryMapper;
 import com.qst.qstmall.service.CategoryLevelInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +144,76 @@ public class CategoryLevelService implements CategoryLevelInterface {
         //此商品分类id不存在，返回空
         return null;
     }
+
+    @Override
+    //重写添加商品分类信息方法
+    public void addGoodsCategory(GoodsCategoryLevelThird goodsCategoryLevelThird){
+        goodsCategoryMapper.insert_category(goodsCategoryLevelThird);
+    }
+
+    @Override
+    //重写修改商品分类信息方法
+    public boolean updateGoodsCategory(GoodsCategoryLevelThird goodsCategoryLevelThird){
+        int i = goodsCategoryMapper.update_category(goodsCategoryLevelThird);
+        if(i == 0){//修改失败
+            return false;//返回假
+        }
+        //修改成功
+        return true;//返回真
+    }
+
+    @Override
+    //重写删除商品分类信息方法
+    public boolean deleteGoodsCategory(long category_id,int update_user){
+        int i = goodsCategoryMapper.update_category_is_deleted(category_id,update_user);
+        if(i == 0){//修改失败
+            return false;//返回假
+        }
+        //修改成功
+        return true;//返回真
+    }
+
+    @Override
+    //重写根据3级商品的分类id获取商品分类信息
+    public GoodsCategoryLevelThird get_category_third(long category_id){
+        GoodsCategoryLevelThird goodsCategoryLevelThird = goodsCategoryMapper.select_category_id(category_id);
+        return goodsCategoryLevelThird;
+    }
+
+    @Override
+    //重写根据3级商品的分类id获取2级分类信息
+    public GoodsCategoryLevelSecond get_category_second(long category_id){
+        ArrayList<GoodsCategoryLevelFirst> levelAll = this.levelAll();
+        for (GoodsCategoryLevelFirst goodsCategoryLevelFirst : levelAll) {
+            ArrayList<GoodsCategoryLevelSecond> goodsCategoryLevelSeconds = goodsCategoryLevelFirst.getGoodsCategoryLevelSeconds();
+            for (GoodsCategoryLevelSecond goodsCategoryLevelSecond : goodsCategoryLevelSeconds) {
+                ArrayList<GoodsCategoryLevelThird> goodsCategoryLevelThirds = goodsCategoryLevelSecond.getGoodsCategoryLevelThirds();
+                for (GoodsCategoryLevelThird goodsCategoryLevelThird : goodsCategoryLevelThirds) {
+                    if(goodsCategoryLevelThird.getCategory_id()==category_id){
+                        return goodsCategoryLevelSecond;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    //重写根据2级商品分类id获取1级商品分类信息
+    public GoodsCategoryLevelFirst get_category_first(long category_id){
+        ArrayList<GoodsCategoryLevelFirst> levelAll = this.levelAll();
+        for (GoodsCategoryLevelFirst goodsCategoryLevelFirst : levelAll) {
+            ArrayList<GoodsCategoryLevelSecond> goodsCategoryLevelSeconds = goodsCategoryLevelFirst.getGoodsCategoryLevelSeconds();
+            for (GoodsCategoryLevelSecond goodsCategoryLevelSecond : goodsCategoryLevelSeconds) {
+                if(goodsCategoryLevelSecond.getCategory_id()==category_id){
+                    return goodsCategoryLevelFirst;
+                }
+            }
+        }
+        return null;
+    }
+
+
 
 
 
