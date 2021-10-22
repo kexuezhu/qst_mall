@@ -266,7 +266,7 @@
 
     //删除首页配置按钮事件
     function delete_config(config_id) {
-        $.get("/admin/indexConfig/delete", {"carousel_id": config_id}, function (data) {
+        $.get("/admin/indexConfig/delete", {"config_id": config_id}, function (data) {
             if (data === "success") {//服务器返回的数据为success
                 //删除成功
                 swal('删除成功', {

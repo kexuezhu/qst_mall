@@ -16,7 +16,7 @@ public interface UserMapper {
     //登录验证
     //查询用户表中的登录名称和密码与用户输入的账号和密码进行对比
     //返回用户所有信息
-    @Select("select * from tb_qst_mall_user where login_name = #{login_name} and password_md5= #{password_md5} AND is_deleted=0")
+    @Select("select * from tb_qst_mall_user where login_name = #{login_name} and password_md5= #{password_md5} AND is_deleted=0 AND locked_flag=0")
     User login_check(User user);
 
     //注册验证

@@ -24,11 +24,12 @@
             </div>
             <form id="loginForm" action="">
                 <div class="login_main center">
-                    <div class="login-info">手机号:&nbsp;<input class="login-info-input"
-                                                             type="text"
-                                                             name="login_name"
-                                                             id="loginName"
-                                                             placeholder="请输入你的手机号"/>
+                    <div class="login-info">手机号:
+                        <input class="login-info-input"
+                               type="text"
+                               name="login_name"
+                               id="loginName"
+                               placeholder="请输入你的手机号"/>
                     </div>
                     <div class="login-info">密&nbsp;&nbsp;&nbsp;&nbsp;码:&nbsp;<input class="login-info-input"
                                                                                     id="password"
@@ -95,14 +96,13 @@
             //获取用户密码
             var password = $("#password").val();
             //判断密码是否合法
-            if (!validPassword(password)) {//棉麻不合法
+            if (!validPassword(password)) {//密码不合法
                 swal('请输入正确的密码格式(6-20位字符和数字组合)', {
                     icon: "error",
                 });
                 return false;
             }
             //密码合法
-
 
             //异步通信
             //将表单提交到服务器进行登录业务

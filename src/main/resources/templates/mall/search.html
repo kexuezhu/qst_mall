@@ -7,66 +7,66 @@
 <!-- nav -->
 <nav th:replace="mall/header::nav-fragment"></nav>
 <!--分类筛选-->
-<div class="classify">
-    <div class="category">
-        <div class="category_bar">
-            <th:block>
-                <!--            <th:block th:if="${searchPageCategoryVO!=null}">-->
-                <div class="fm c">
-                    <a href="##" class="qqq">qst-mall</a>
-                    <!--                    <a href="##" class="qqq" th:text="${searchPageCategoryVO.secondLevelCategoryName}">qst-mall</a>-->
-                    <div>
-                        <th:block>
-                            <!--                        <th:block th:each="thirdLevelCategory : ${searchPageCategoryVO.thirdLevelCategoryList}">-->
-                            <a></a>
-                            <!--                            <a th:href="@{${'/search?goodsCategoryId='+thirdLevelCategory.categoryId}}"-->
-<!--                            <a th:text="${thirdLevelCategory.categoryName}">qst-mall</a>-->
-                        </th:block>
-                    </div>
-                </div>
-                <i><img src="mall/image/search/right-@1x.png" alt=""></i>
-                <div class="findword">
-                    "
-                    <th:block></th:block>
-                    "
-                    <!--                    "<th:block th:text="${searchPageCategoryVO.currentCategoryName}"></th:block>"-->
-                </div>
-            </th:block>
-            <th:block>
-                <!--            <th:block th:if="${searchPageCategoryVO==null}">-->
-                <th:block>
-                    <!--                <th:block th:if="${keyword!=null and keyword !=''}">-->
-                    <div class="findword">
-                        搜索 "
-                        <th:block></th:block>
-                        "
-                        <!--                        搜索 "<th:block th:text="${keyword}"></th:block>"-->
-                    </div>
-                </th:block>
-            </th:block>
-        </div>
-    </div>
-</div>
+<!--<div class="classify">-->
+<!--    <div class="category">-->
+<!--        <div class="category_bar">-->
+<!--            <th:block>-->
+<!--                &lt;!&ndash;            <th:block th:if="${searchPageCategoryVO!=null}">&ndash;&gt;-->
+<!--                <div class="fm c">-->
+<!--                    <a href="##" class="qqq">qst-mall</a>-->
+<!--                    &lt;!&ndash;                    <a href="##" class="qqq" th:text="${searchPageCategoryVO.secondLevelCategoryName}">qst-mall</a>&ndash;&gt;-->
+<!--                    <div>-->
+<!--                        <th:block>-->
+<!--                            &lt;!&ndash;                        <th:block th:each="thirdLevelCategory : ${searchPageCategoryVO.thirdLevelCategoryList}">&ndash;&gt;-->
+<!--                            <a></a>-->
+<!--                            &lt;!&ndash;                            <a th:href="@{${'/search?goodsCategoryId='+thirdLevelCategory.categoryId}}"&ndash;&gt;-->
+<!--&lt;!&ndash;                            <a th:text="${thirdLevelCategory.categoryName}">qst-mall</a>&ndash;&gt;-->
+<!--                        </th:block>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <i><img src="mall/image/search/right-@1x.png" alt=""></i>-->
+<!--                <div class="findword">-->
+<!--                    "-->
+<!--                    <th:block></th:block>-->
+<!--                    "-->
+<!--                    &lt;!&ndash;                    "<th:block th:text="${searchPageCategoryVO.currentCategoryName}"></th:block>"&ndash;&gt;-->
+<!--                </div>-->
+<!--            </th:block>-->
+<!--            <th:block>-->
+<!--                &lt;!&ndash;            <th:block th:if="${searchPageCategoryVO==null}">&ndash;&gt;-->
+<!--                <th:block>-->
+<!--                    &lt;!&ndash;                <th:block th:if="${keyword!=null and keyword !=''}">&ndash;&gt;-->
+<!--                    <div class="findword">-->
+<!--                        搜索 "-->
+<!--                        <th:block></th:block>-->
+<!--                        "-->
+<!--                        &lt;!&ndash;                        搜索 "<th:block th:text="${keyword}"></th:block>"&ndash;&gt;-->
+<!--                    </div>-->
+<!--                </th:block>-->
+<!--            </th:block>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 <!--排序-->
-<div class="sort">
-    <div class="list">
-        <a>
-            <!--        <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy=default'}">-->
-            <div>推荐</div>
-            <!--            <div th:class="${orderBy==null || orderBy=='default'?'active':''}">推荐</div>-->
-        </a>
-        <a>
-            <!--        <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy=new'}">-->
-            <div>新品</div>
-            <!--            <div th:class="${orderBy=='new'?'active':''}">新品</div>-->
-        </a>
-        <a>
-            <!--        <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy=price'}">-->
-            <div>价格</div>
-            <!--            <div th:class="${orderBy=='price'?'active':''}">价格</div>-->
-        </a>
-    </div>
-</div>
+<!--<div class="sort">-->
+<!--    <div class="list">-->
+<!--        <a>-->
+<!--            &lt;!&ndash;        <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy=default'}">&ndash;&gt;-->
+<!--            <div>推荐</div>-->
+<!--            &lt;!&ndash;            <div th:class="${orderBy==null || orderBy=='default'?'active':''}">推荐</div>&ndash;&gt;-->
+<!--        </a>-->
+<!--        <a>-->
+<!--            &lt;!&ndash;        <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy=new'}">&ndash;&gt;-->
+<!--            <div>新品</div>-->
+<!--            &lt;!&ndash;            <div th:class="${orderBy=='new'?'active':''}">新品</div>&ndash;&gt;-->
+<!--        </a>-->
+<!--        <a>-->
+<!--            &lt;!&ndash;        <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy=price'}">&ndash;&gt;-->
+<!--            <div>价格</div>-->
+<!--            &lt;!&ndash;            <div th:class="${orderBy=='price'?'active':''}">价格</div>&ndash;&gt;-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</div>-->
 
 <div class="goods_item center">
     <div class="main center">
@@ -99,42 +99,42 @@
         </th:block>
         <div class="clear"></div>
     </div>
-    <div class="pages">
-        <div class="page_wrap">
-            <th:block>
-                <!--            <th:block th:if="${null != pageResult and !#lists.isEmpty(pageResult.list)}">-->
-                <span class="page_span1">
-                 <a>
-<!--                 <a th:href="@{${pageResult.currPage==1}?'##':'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage-1}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}">-->
-                                    < 上一页
-                                </a>
-                <th:block>
-<!--                <th:block th:if="${pageResult.currPage-2 >=1}">-->
-                    <a>1</a>
-                    <!--                    <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage-2}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}" th:text="${pageResult.currPage -2}">1</a>-->
-                </th:block>
-                <th:block>
-<!--                <th:block th:if="${pageResult.currPage-1 >=1}">-->
-                    <a>1</a></th:block>
-                    <!--                    <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage-1}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}" th:text="${pageResult.currPage -1}">1</a></th:block>-->
-                <a href="##" class="active">1</a>
-                    <!--                <a href="##" class="active" th:text="${pageResult.currPage}">1</a>-->
-                <th:block>
-<!--                <th:block th:if="${pageResult.currPage+1<=pageResult.totalPage}">-->
-                    <a>1</a></th:block>
-                    <!--                    <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage+1}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}" th:text="${pageResult.currPage +1}">1</a></th:block>-->
-                <th:block>
-<!--                <th:block th:if="${pageResult.currPage+2<=pageResult.totalPage}">-->
-                    <a>1</a></th:block>
-                    <!--                    <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage+2}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}" th:text="${pageResult.currPage +2}">1</a></th:block>-->
-                 <a>
-<!--                 <a th:href="@{${pageResult.currPage>=pageResult.totalPage}?'##':'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage+1}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}">-->
-                                    下一页 >
-                                </a>
-					</span>
-            </th:block>
-        </div>
-    </div>
+<!--    <div class="pages">-->
+<!--        <div class="page_wrap">-->
+<!--            <th:block>-->
+<!--                &lt;!&ndash;            <th:block th:if="${null != pageResult and !#lists.isEmpty(pageResult.list)}">&ndash;&gt;-->
+<!--                <span class="page_span1">-->
+<!--                 <a>-->
+<!--&lt;!&ndash;                 <a th:href="@{${pageResult.currPage==1}?'##':'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage-1}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}">&ndash;&gt;-->
+<!--                                    < 上一页-->
+<!--                                </a>-->
+<!--                <th:block>-->
+<!--&lt;!&ndash;                <th:block th:if="${pageResult.currPage-2 >=1}">&ndash;&gt;-->
+<!--                    <a>1</a>-->
+<!--                    &lt;!&ndash;                    <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage-2}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}" th:text="${pageResult.currPage -2}">1</a>&ndash;&gt;-->
+<!--                </th:block>-->
+<!--                <th:block>-->
+<!--&lt;!&ndash;                <th:block th:if="${pageResult.currPage-1 >=1}">&ndash;&gt;-->
+<!--                    <a>1</a></th:block>-->
+<!--                    &lt;!&ndash;                    <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage-1}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}" th:text="${pageResult.currPage -1}">1</a></th:block>&ndash;&gt;-->
+<!--                <a href="##" class="active">1</a>-->
+<!--                    &lt;!&ndash;                <a href="##" class="active" th:text="${pageResult.currPage}">1</a>&ndash;&gt;-->
+<!--                <th:block>-->
+<!--&lt;!&ndash;                <th:block th:if="${pageResult.currPage+1<=pageResult.totalPage}">&ndash;&gt;-->
+<!--                    <a>1</a></th:block>-->
+<!--                    &lt;!&ndash;                    <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage+1}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}" th:text="${pageResult.currPage +1}">1</a></th:block>&ndash;&gt;-->
+<!--                <th:block>-->
+<!--&lt;!&ndash;                <th:block th:if="${pageResult.currPage+2<=pageResult.totalPage}">&ndash;&gt;-->
+<!--                    <a>1</a></th:block>-->
+<!--                    &lt;!&ndash;                    <a th:href="@{'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage+2}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}" th:text="${pageResult.currPage +2}">1</a></th:block>&ndash;&gt;-->
+<!--                 <a>-->
+<!--&lt;!&ndash;                 <a th:href="@{${pageResult.currPage>=pageResult.totalPage}?'##':'/search?keyword='+${keyword==null?'':keyword}+'&page=' + ${pageResult.currPage+1}+'&goodsCategoryId='+${goodsCategoryId==null?'':goodsCategoryId}+'&orderBy='+${orderBy==null?'':orderBy}}">&ndash;&gt;-->
+<!--                                    下一页 >-->
+<!--                                </a>-->
+<!--					</span>-->
+<!--            </th:block>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
 
 <div th:replace="mall/footer::footer-fragment"></div>

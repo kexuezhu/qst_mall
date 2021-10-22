@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>青软商城-购物车</title>
-    <link rel="stylesheet" th:href="@{mall/css/iconfont.css}">
-    <link rel="stylesheet" th:href="@{mall/css/common.css}">
-    <link rel="stylesheet" th:href="@{mall/styles/header.css}">
-    <link rel="stylesheet" th:href="@{mall/styles/cart.css}">
+    <link rel="stylesheet" th:href="@{/mall/css/iconfont.css}">
+    <link rel="stylesheet" th:href="@{/mall/css/common.css}">
+    <link rel="stylesheet" th:href="@{/mall/styles/header.css}">
+    <link rel="stylesheet" th:href="@{/mall/styles/cart.css}">
     <link rel="stylesheet" th:href="@{/admin/plugins/sweetalert/sweetalert.css}"/>
 </head>
 <body>
-<header th:replace="mall/header::header-fragment"></header>
+<header th:replace="/mall/header::header-fragment"></header>
 
 <div id="cart">
     <div class="banner_x center">
         <a th:href="@{/index.html}" target="_blank">
             <div class="logo fl">
-                <img src="mall/image/qst-logo-3.png"/>
+                <img src="/mall/image/qst-logo-3.png"/>
             </div>
         </a>
 
@@ -28,7 +28,7 @@
     <div class="cart_bg">
         <th:block th:if="${#lists.isEmpty(userShoppingCarts)}">
             <div class="list center" style="text-align: center">
-                <img th:src="@{mall/image/emptyCart.png}" style="margin-top: 20px">购物车中还没有商品，赶紧去选购吧！
+                <img th:src="@{/mall/image/emptyCart.png}" style="margin-top: 20px">购物车中还没有商品，赶紧去选购吧！
                 <a href="/index.html" style="color: #1baeae">返回首页>></a>
             </div>
         </th:block>
@@ -116,7 +116,7 @@
         </div>
     </div>
 </div>
-<div th:replace="mall/footer::footer-fragment"></div>
+<div th:replace="/mall/footer::footer-fragment"></div>
 
 </body>
 <!-- jQuery -->
@@ -209,7 +209,7 @@
 
         $.ajax({
             type: 'GET',
-            url: '/update-shop-cart',
+            url: '/user/update-shop-cart',
             contentType: 'application/json',
             data: {"cart_item_id": id, "goods_count": goodsCount},
             success: function (result) {
@@ -245,7 +245,7 @@
                 if (flag) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/delete-shop-cart?cart_item_id=' + id,
+                        url: '/user/delete-shop-cart?cart_item_id=' + id,
                         success: function (result) {
                             if (result == 200) {
                                 window.location.reload();
@@ -279,7 +279,7 @@
                 if (flag) {
                     $.ajax({
                         type: 'DELETE',
-                        url: '/delete-shop-cart-all',
+                        url: '/user/delete-shop-cart-all',
                         success: function (result) {
                             if (result == 200) {
                                 window.location.reload();
@@ -315,7 +315,7 @@
         $('.checkItem:checked').each(function () {
             id_array.push($(this).attr('id'));
         });
-        window.location.href = '/settle-shop-cart?cart_item_id=' + id_array
+        window.location.href = '/user/settle-shop-cart?cart_item_id=' + id_array
     }
 </script>
 </html>

@@ -28,7 +28,16 @@ public class QstMallGoodsController {
 
     //跳转到商品管理页面
     @RequestMapping("/goods")
-    public ModelAndView qst_mall_goodsHtml() {
+    public ModelAndView qst_mall_goodsHtml(HttpServletRequest request) {
+        //获取服务器中的session
+        HttpSession session = request.getSession();
+        //获取session中的管理员对象
+        AdminUser adminUser = (AdminUser)session.getAttribute("adminUser");
+        if(adminUser == null){//管理员未登录，跳转到管理员登录页面
+            ModelAndView modelAndView = new ModelAndView("admin/login");
+            return modelAndView;
+        }
+
         ArrayList<GoodsInfo> goodsInfos = goodsInfoService.get_allGoodsInfo();
 
         ModelAndView modelAndView = new ModelAndView("admin/qst_mall_goods");
@@ -39,7 +48,17 @@ public class QstMallGoodsController {
 
     //处理跳转到添加商品页面请求
     @RequestMapping("/goods/edit")
-    public ModelAndView edit_qst_mall_goods_editHtml() {
+    public ModelAndView edit_qst_mall_goods_editHtml(HttpServletRequest request) {
+        //获取服务器中的session
+        HttpSession session = request.getSession();
+        //获取session中的管理员对象
+        AdminUser adminUser = (AdminUser)session.getAttribute("adminUser");
+        if(adminUser == null){//管理员未登录，跳转到管理员登录页面
+            ModelAndView modelAndView = new ModelAndView("admin/login");
+            return modelAndView;
+        }
+
+
         ArrayList<GoodsCategoryLevelFirst> goodsCategoryLevelFirsts = categoryLevelService.levelFirst();//获取所有1级分类
 
         ModelAndView modelAndView = new ModelAndView("admin/qst_mall_goods_edit");

@@ -27,7 +27,7 @@ public class QstMallGoodsCategoryController {
         //判断是否是下级分类管理请求或返回请求
         if (function == null) {//请求跳转商品分类管理页面
             ArrayList<GoodsCategoryLevelFirst> goodsCategories = categoryLevelService.levelFirst();
-            category_level = "1";
+            category_level = "1";//标记当前页分类等级为1级
             parent_id = "0";
             modelAndView.addObject("goodsCategories", goodsCategories);//添加1级商品分类
         }
@@ -40,16 +40,16 @@ public class QstMallGoodsCategoryController {
                 //查询对应2级分类
                 ArrayList<GoodsCategoryLevelSecond> goodsCategories = categoryLevelService.getLevelSeconds_First(categoryId);
                 modelAndView.addObject("goodsCategories", goodsCategories);//添加2级商品分类
-                category_level = "2";
-                parent_id = category_id;
+                category_level = "2";//标记当前页分类等级为2级
+                parent_id = category_id;//将1级分类的分类id赋值给当前2级分类的父分类id
             }
             else if (category_level.equals("2")){//2级分类页发出的请求
                 //查询对应2级分类
                 ArrayList<GoodsCategoryLevelThird> goodsCategories = categoryLevelService.getLevelThirds_Second(categoryId);
                 modelAndView.addObject("goodsCategories", goodsCategories);//添加3级商品分类
-                category_level = "3";
-                back_parent_id = parent_id;
-                parent_id = category_id;
+                category_level = "3";//标记当前页分类等级为3级
+                back_parent_id = parent_id;//返回的对应二级类的父分类id
+                parent_id = category_id;//将2级分类的分类id赋值给当前3级分类的父分类id
             }
 
         }
@@ -58,16 +58,16 @@ public class QstMallGoodsCategoryController {
                 //查询1级分类
                 ArrayList<GoodsCategoryLevelFirst> goodsCategories = categoryLevelService.levelFirst();
                 modelAndView.addObject("goodsCategories", goodsCategories);//添加1级商品分类
-                category_level = "1";
-                parent_id = "0";
+                category_level = "1";//标记当前页分类等级为1级
+                parent_id = "0";//将当前1级分类的父分类id赋值为0
             }
             else if(category_level.equals("3")){//3级分类页发出的请求
                 long backParentId = Long.parseLong(back_parent_id);
                 //查询对应2级分类
                 ArrayList<GoodsCategoryLevelSecond> goodsCategories = categoryLevelService.getLevelSeconds_First(backParentId);
                 modelAndView.addObject("goodsCategories", goodsCategories);//添加2级商品分类
-                category_level = "2";
-                parent_id = back_parent_id;
+                category_level = "2";//标记当前页分类等级为2级
+                parent_id = back_parent_id;//将1级分类的分类id赋值给当前2级分类的父分类id
             }
         }
 

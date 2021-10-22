@@ -24,8 +24,6 @@ import java.util.Map;
 public class QstMallCarouselController {
     @Autowired
     private CarouselService carouselService;
-    @Autowired
-    private AdminUserService adminUserService;
 
 
     //跳转到轮播图配置页面

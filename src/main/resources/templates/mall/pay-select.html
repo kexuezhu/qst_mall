@@ -166,7 +166,7 @@
 
     function payOrder(payType) {
         var orderNo = $("#orderNoValue").val();
-        window.location.href = '/payPage?order_no=' + orderNo + "&pay_type=" + payType;
+        window.location.href = '/user/payPage?order_no=' + orderNo + "&pay_type=" + payType;//payType 为1时，选择了支付宝支付。 为2时，选择了微信支付
     }
 </script>
 </html>

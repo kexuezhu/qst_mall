@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/user")
 public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
@@ -47,7 +48,7 @@ public class ShoppingCartController {
     public void addCart(ShoppingCartItem shoppingCartItem, HttpServletRequest request, HttpServletResponse response) {
         //将商品信息加入到购物车商品表中
         String s = shoppingCartService.addShoppingCart(shoppingCartItem);
-        if (s == "add") {//购物车商品信息添加成功
+        if (s.equals("add")) {//购物车商品信息添加成功
             try {
                 //返回添加成功信息
                 response.getWriter().write(s);
@@ -55,7 +56,7 @@ public class ShoppingCartController {
                 e.printStackTrace();
             }
         }
-        if (s == "update") {//购物车商品信息更新成功
+        if (s.equals("update")) {//购物车商品信息更新成功
             try {
                 //返回更新成功信息
                 response.getWriter().write(s);
@@ -63,7 +64,7 @@ public class ShoppingCartController {
                 e.printStackTrace();
             }
         }
-        if (s == "exceed_max") {//商品数量超过最大值，购物车商品信息更新失败
+        if (s.equals("exceed_max")) {//商品数量超过最大值，购物车商品信息更新失败
             try {
                 //返回更新失败信息
                 response.getWriter().write(s);
@@ -81,7 +82,7 @@ public class ShoppingCartController {
     @DeleteMapping("/delete-shop-cart")
     public String deleteCart(long cart_item_id, HttpServletRequest request, HttpServletResponse response) {
         String s = shoppingCartService.deleteShoppingCart(cart_item_id);
-        if (s != "success") {//删除失败
+        if (!s.equals("success")) {//删除失败
             return null;//向客户端返回空
         }
         //删除成功，修改我的商品数量
@@ -101,7 +102,7 @@ public class ShoppingCartController {
         int i = 0;//用于判断是否成功将所有购物项删除
         for (ShoppingCartItem userShoppingCart : userShoppingCarts) {
             String s = shoppingCartService.deleteShoppingCart(userShoppingCart.getCart_item_id());//根据购物项id删除对应购物车商品信息
-            if(s == "success"){//删除成功
+            if(s.equals("success")){//删除成功
                 i++;
             }
         }
@@ -120,7 +121,7 @@ public class ShoppingCartController {
     @GetMapping("/update-shop-cart")
     public String updateCart(long cart_item_id, int goods_count,HttpServletRequest request,HttpServletResponse response){
         String s = shoppingCartService.updateItemShoppingCart(cart_item_id, goods_count);
-        if(s != "success"){//更新失败
+        if(!s.equals("success")){//更新失败
             return null;//返回空
         }
         //更新成功

@@ -44,11 +44,18 @@
                     </a>
                 </div>
                 <div class="shopcart">
-                    <a th:href="@{/cart.html}" style="color: white;"><i class="iconfont icon-cart"></i>
-                        购物车(
-                        <th:block th:text="${session.myShopping_count}"></th:block>
-                        )
-                    </a>
+                    <th:block th:if="${session.user}==null">
+                        <a th:href="@{/user/login.html}" style="color: white;"><i class="iconfont icon-cart"></i>
+                            购物车(0)
+                        </a>
+                    </th:block>
+                    <th:block th:unless="${session.user}==null">
+                        <a th:href="@{/user/cart.html}" style="color: white;"><i class="iconfont icon-cart"></i>
+                            购物车(
+                            <th:block th:text="${session.myShopping_count}"></th:block>
+                            )
+                        </a>
+                    </th:block>
                 </div>
             </th:block>
             <th:block th:if="${session.user==null}">
@@ -68,10 +75,10 @@
     <div class="banner_x center">
         <a th:href="@{/index.html}" class="logo"><h1>青软商城</h1></a>
         <a th:href="@{/index.html}" class="gif"></a>
-        <ul class="list">
-            <li><a href="##">秒杀</a></li>
-            <li><a href="##">优惠券</a></li>
-        </ul>
+        <!--        <ul class="list">-->
+        <!--            <li><a href="##">秒杀</a></li>-->
+        <!--            <li><a href="##">优惠券</a></li>-->
+        <!--        </ul>-->
         <div class="fr">
             <div class="search">
                 <input class="text" type="text" id="keyword" autocomplete="off">

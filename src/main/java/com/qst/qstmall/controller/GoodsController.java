@@ -52,7 +52,7 @@ public class GoodsController {
         //商品信息集合缓存对象
         ArrayList<GoodsInfo> goodsInfos = new ArrayList<>();
         //获取请求参数中的商品分类id
-        long category_id = Long.valueOf(request.getParameter("goodsCategoryId"));
+        long category_id = Long.parseLong(request.getParameter("goodsCategoryId"));
 
         //通过商品分类id获取对应3级商品分类集合
         ArrayList<GoodsCategoryLevelThird> goodsCategoryLevelThirds = categoryLevelService.levelThirdAll(category_id);

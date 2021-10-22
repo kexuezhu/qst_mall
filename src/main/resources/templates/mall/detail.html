@@ -35,17 +35,18 @@
                             </div>
                         </th:block>
                     </th:block>
+                    <!-- 未配置轮播图则显示商品主图 -->
+                    <th:block th:if="${#lists.isEmpty(goodsInfo.goods_carouselList)}">
+                        <img th:src="@{${goodsInfo.goods_cover_img}}" alt="">
+                    </th:block>
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
-                <!-- <img th:src="@{${goodsDetail.goodsCoverImg}}">-->
             </div>
         </div>
         <div class="right fr">
             <input type="hidden" id="endTime">
-
-
             <div class="h3 ml20 mt20" th:text="${goodsInfo.goods_name}">QSTMall</div>
             <div class="sub_title mr40 ml20 mt10" th:text="${goodsInfo.goods_intro}">QSTMall</div>
             <div class="item_price mr40 mt10">
@@ -57,17 +58,23 @@
                     </th:block>
                 </th:block>
             </div>
-            <th:block>
+            <th:block th:if="${goodsInfo.goods_sell_status}==1">
                 <div class="tip">
                     <h2>该商品已下架</h2>
                 </div>
             </th:block>
+            <th:block th:if="${goodsInfo.goods_sell_status}==0">
+                <div class="tip">
+                    <h2>该商品库存充足</h2>
+                </div>
+            </th:block>
+
             <th:block>
                 <div class="order">
                     <input class="addBtn min" id="btn-reduce" type="button" value="-"/>
                     <input class="item-number" id="buy-num" type="text" value="1">
                     <input class="addBtn add" id="btn-add" type="button" value="+"/>
-                    <input class="car" id="saveAndToCart" type="button" value="立即选购"/>
+                    <!--                    <input class="car" id="saveAndToCart" type="button" value="立即选购"/>-->
                     <input class="car" th:onclick="'saveToCart(' + ${goodsInfo.goods_id} + ')'" type="button"
                            value="加入购物车"/>
                 </div>
@@ -77,47 +84,40 @@
                 <dl>
                     <dt>承诺</dt>
                     <dd>
-                        <a class="J_Cont" title="满足7天无理由退换货申请的前提下，包邮商品需要买家承担退货邮费，非包邮商品需要买家承担发货和退货邮费。" href="#"
-                           target="_blank">
-                            <img>7天无理由
-                            <img th:src="@{/mall/image/7d.jpg}">7天无理由
-                        </a>
+                        7天无理由
+                        <img th:src="@{/mall/image/7d.jpg}">
                     </dd>
                 </dl>
                 <dl>
                     <dt>支付</dt>
                     <dd>
-                        <a href="##" target="_blank">
-                            <img>蚂蚁花呗
-                            <img th:src="@{/mall/image/hua.png}">蚂蚁花呗
-                        </a>
-                        <a href="##" target="_blank">
-                            <img>信用卡支付
-                            <img th:src="@{/mall/image/card.png}">信用卡支付
-                        </a>
-                        <a href="##" target="_blank">
-                            <img>集分宝
-                            <img th:src="@{/mall/image/ji.png}">集分宝
+                        蚂蚁花呗
+                        <img th:src="@{/mall/image/hua.png}">
+                        信用卡支付
+                        <img th:src="@{/mall/image/card.png}">
+                        集分宝
+                        <img th:src="@{/mall/image/ji.png}">
                         </a>
                     </dd>
                 </dl>
                 <dl>
                     <dt>支持</dt>
-                    <dd>折旧变现，买新更省钱。<a style="float:none;text-decoration: underline;" href="##">详情</a></dd>
+                    <dd>折旧变现，买新更省钱。</dd>
+                    <!--                    <dd>折旧变现，买新更省钱。<a style="float:none;text-decoration: underline;" href="##">详情</a></dd>-->
                 </dl>
             </div>
         </div>
         <div class="clear"></div>
     </div>
-    <div class="tab-main">
-        <div class="tab">
-            <ul>
-                <li class="current">商品介绍</li>
-                <li>商品评价</li>
-                <li>售后保障</li>
-            </ul>
-        </div>
-    </div>
+    <!--    <div class="tab-main">-->
+    <!--        <div class="tab">-->
+    <!--            <ul>-->
+    <!--                <li class="current">商品介绍</li>-->
+    <!--                <li>商品评价</li>-->
+    <!--                <li>售后保障</li>-->
+    <!--            </ul>-->
+    <!--        </div>-->
+    <!--    </div>-->
     <!-- 这里使用的是 th:utext 标签，用 th:text 不会解析 html，用 th:utext 会解析 html -->
     <div class="goods mt20 w clearfix"></div>
     <!--    <div class="goods mt20 w clearfix" th:utext="${goodsDetail.goodsDetailContent}"></div>-->
@@ -156,7 +156,7 @@
                 icon: "error",
             });
         } else {
-            $.get("/add-shop-cart", {
+            $.get("/user/add-shop-cart", {
                 "user_id": user_id,
                 "goods_id": goods_id,
                 "goods_count": goods_count

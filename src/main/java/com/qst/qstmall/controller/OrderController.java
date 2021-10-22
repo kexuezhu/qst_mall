@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping("/user")
 public class OrderController {
     @Autowired
     private ShoppingCartService shoppingCartService;
@@ -136,7 +137,7 @@ public class OrderController {
             orderItemService.add_orderItem(orderItem);//将封装好的订单商品添加到数据库中
         }
 
-        return "forward:/pay-select.html?order_no="+order_no;//转发到选择支付方式页面
+        return "forward:/user/pay-select.html?order_no="+order_no;//转发到选择支付方式页面
     }
 
     //处理取消订单请求

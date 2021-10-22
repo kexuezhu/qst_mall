@@ -6,7 +6,7 @@
         <img th:src="@{/admin/dist/img/QST-logo-1.png}" alt="ssm-cluster Logo"
              class="brand-image img-circle elevation-3"
              style="opacity: .8">
-        <span class="brand-text font-weight-light" th:text="${session.adminUser.nick_name}">青软商城</span>
+        <span class="brand-text font-weight-light" id="nick_name">青软商城</span>
     </a>
     <!-- Sidebar -->
     <div class="sidebar">
@@ -84,14 +84,14 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a th:href="@{/admin/promotion}" th:class="${path}=='promotion'?'nav-link active':'nav-link'">
-                        <i class="fa fa-clock-o nav-icon" aria-hidden="true"></i>
-                        <p>
-                            秒杀管理
-                        </p>
-                    </a>
-                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a th:href="@{/admin/promotion}" th:class="${path}=='promotion'?'nav-link active':'nav-link'">-->
+<!--                        <i class="fa fa-clock-o nav-icon" aria-hidden="true"></i>-->
+<!--                        <p>-->
+<!--                            秒杀管理-->
+<!--                        </p>-->
+<!--                    </a>-->
+<!--                </li>-->
                 <li class="nav-header">系统管理</li>
                 <li class="nav-item">
                     <a th:href="@{/admin/profile}"
@@ -111,4 +111,12 @@
         </nav>
     </div>
 </aside>
+
+<script>
+
+
+
+</script>
+
+
 </html>

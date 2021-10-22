@@ -225,7 +225,7 @@
                 if (flag) {
                     $.ajax({
                         type: 'GET',
-                        url: '/order-cancel?order_no=' + orderNo,
+                        url: '/user/order-cancel?order_no=' + orderNo,
                         success: function (result) {
                             if (result == 200) {
                                 window.location.reload();
@@ -250,7 +250,7 @@
     /*去支付按钮事件*/
     function payOrder() {
         var orderNo = $("#orderNoValue").val();
-        window.location.href = '/pay-select.html?order_no=' + orderNo;
+        window.location.href = '/user/pay-select.html?order_no=' + orderNo;
     }
 
     /*确认收货按钮事件*/
@@ -258,7 +258,7 @@
         var orderNo = $("#orderNoValue").val();
         $.ajax({
             type: 'GET',
-            url: '/order-confirm?order_no=' + orderNo,
+            url: '/user/order-confirm?order_no=' + orderNo,
             success: function (result) {
                 if (result == 200) {
                     window.location.reload();

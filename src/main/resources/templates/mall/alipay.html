@@ -81,10 +81,10 @@
         var orderNo = $("#orderNoValue").val();
         $.ajax({
             type: 'GET',
-            url: '/paySuccess?pay_type=1&order_no=' + orderNo,
+            url: '/user/paySuccess?pay_type=1&order_no=' + orderNo,
             success: function (result) {
                 if (result == 200) {
-                    window.location.href = '/order-detail.html?order_no=' + orderNo;
+                    window.location.href = '/user/order-detail.html?order_no=' + orderNo;
                 } else {
                     alert(result.message);
                 }
